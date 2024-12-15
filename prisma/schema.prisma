@@ -14,33 +14,35 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  clerkUserId String @unique
-  firstName String?
-  lastName String?
-  imageUrl String?
-  companies Company[] @relation("UserCompanies") // Esta relación ya es opcional por defecto
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String    @id @default(cuid())
+  email       String    @unique
+  clerkUserId String    @unique
+  firstName   String?
+  lastName    String?
+  imageUrl    String?
+  companies   Company[] @relation("UserCompanies") // Relación opcional
+  position    String?   // Puesto de trabajo opcional
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  jobs        Job[]     @relation("UserJobs")
 }
 
 model Company {
-  id        String   @id @default(cuid())
-  title     String
+  id          String   @id @default(cuid())
+  title       String
   description String?
-  imageUrl String?
-  users User[] @relation("UserCompanies") // Esta relación ya es opcional por defecto
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  imageUrl    String?
+  users       User[]   @relation("UserCompanies") // Relación opcional
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Job {
-  id        String   @id @default(cuid())
-  title     String
+  id          String   @id @default(cuid())
+  title       String
   description String?
-  imageUrl String?
-  users User[] @relation("UserJobs")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  imageUrl    String?
+  users       User[]   @relation("UserJobs")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
