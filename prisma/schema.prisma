@@ -30,6 +30,7 @@ model User {
 model Company {
   id          String   @id @default(cuid())
   title       String
+  slug        String   @unique
   description String?
   imageUrl    String?
   users       User[]   @relation("UserCompanies") // Relación opcional
