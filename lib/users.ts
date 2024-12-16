@@ -1,71 +1,94 @@
-import prisma from './prisma'
+import prisma from '@/lib/prisma'
 import { User } from '@prisma/client'
+
 
 export async function getUsers(limit?: number) {
   try {
     const users = await prisma.user.findMany({
-      take: limit,
       orderBy: {
-        createdAt: 'desc'
-      }
+        lastName: 'asc'
+      },
+      ...(limit ? { take: limit } : {})
     })
-    return users
+    return { users }
   } catch (error) {
-    console.error(error)
-    throw error
+    return { error }
   }
 }
 
 export async function createUser(data: User) {
   try {
     const user = await prisma.user.create({ data })
-    return user
+    return { user }
   } catch (error) {
-    console.error(error)
-    throw error
+    return { error }
   }
 }
 
-export async function getUserById({ id, clerkUserId }: { id?: number; clerkUserId?: string }) {
+export async function getUserById({
+  id,
+  clerkUserId
+}: {
+  id?: string
+  clerkUserId?: string
+}) {
   try {
-    const user = await prisma.user.findUnique({ where: { id, clerkUserId } })
-    return user
+    if (!id && !clerkUserId) {
+      throw new Error('id or clerkUserId is required')
+    }
+
+    const query: { id?: string; clerkUserId?: string } = {};
+    if (id) {
+      query.id = id;
+    }
+    if (clerkUserId) {
+      query.clerkUserId = clerkUserId;
+    }
+
+    const user = await prisma.user.findUnique({
+      where: query as any
+    });
+    return { user }
   } catch (error) {
-    console.error(error)
-    throw error
+    return { error }
   }
 }
 
 export async function getUserByEmail(email: string) {
   try {
-    const user = await prisma.user.findUnique({ where: { email } })
-    return user
+    const user = await prisma.user.findUnique({
+      where: { email }
+    })
+    return { user }
   } catch (error) {
-    console.error(error)
-    throw error
+    return { error }
   }
 }
 
-
-export async function updateUser(id: number, data: Partial<User>) {
+export async function updateUser(id: string, data: Partial<User>) {
   try {
-    const user = await prisma.user.update({ where: { id }, data })
-    return user
+    const user = await prisma.user.update({
+      where: { clerkUserId: id },
+      data
+    })
+    return { user }
   } catch (error) {
-    console.error(error)
-    throw error
+    return { error }
   }
 }
 
-export async function deleteUser(id: number) {
+export async function deleteUser(id: string) {
   try {
-    await prisma.user.delete({ where: { id } })
+    const user = await prisma.user.delete({
+      where: { clerkUserId: id }
+    })
+    return { user }
   } catch (error) {
-    console.error(error)
-    throw error
+    return { error }
   }
 }
 
 export function combineName(user: User) {
-  return `${user.firstName} ${user.lastName}`
+  const { firstName, lastName } = user
+  return `${firstName} ${lastName}`
 }

@@ -1,14 +1,9 @@
-import { clerkMiddleware , createRouteMatcher } from "@clerk/nextjs/server";
-import { NextRequest, NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-const isProtected = createRouteMatcher(['/profile'])
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/profile(.*)'])
 
-export default clerkMiddleware((auth,req: NextRequest) => {
-  if (isProtected(req)) {
-    auth.protect()
-  }
-
-  return NextResponse.next()
+export default clerkMiddleware(async (auth, req) => {
+  if (isProtectedRoute(req)) await auth.protect()
 })
 
 export const config = {
@@ -18,4 +13,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-};
+}
