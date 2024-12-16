@@ -26,7 +26,7 @@ export async function createUser(data: User) {
   }
 }
 
-export async function getUserById({ id, clerkUserId }: { id?: string; clerkUserId?: string }) {
+export async function getUserById({ id, clerkUserId }: { id?: number; clerkUserId?: string }) {
   try {
     const user = await prisma.user.findUnique({ where: { id, clerkUserId } })
     return user
@@ -47,7 +47,7 @@ export async function getUserByEmail(email: string) {
 }
 
 
-export async function updateUser(id: string, data: Partial<User>) {
+export async function updateUser(id: number, data: Partial<User>) {
   try {
     const user = await prisma.user.update({ where: { id }, data })
     return user
@@ -57,7 +57,7 @@ export async function updateUser(id: string, data: Partial<User>) {
   }
 }
 
-export async function deleteUser(id: string) {
+export async function deleteUser(id: number) {
   try {
     await prisma.user.delete({ where: { id } })
   } catch (error) {

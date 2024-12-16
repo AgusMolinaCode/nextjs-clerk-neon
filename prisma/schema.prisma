@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,36 +8,39 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(cuid())
+  id          Int       @id @default(autoincrement())
   email       String    @unique
   clerkUserId String    @unique
   firstName   String?
   lastName    String?
   imageUrl    String?
-  companies   Company[] @relation("UserCompanies") // Relación opcional
-  position    String?   // Puesto de trabajo opcional
+  whatsapp    String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  jobs        Job[]     @relation("UserJobs")
+  products    Product[] // Relación con productos
+  sentMessages    Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
 }
 
-model Company {
-  id          String   @id @default(cuid())
+model Product {
+  id          Int       @id @default(autoincrement())
   title       String
-  slug        String   @unique
+  slug        String    @unique
   description String?
+  price       Float
   imageUrl    String?
-  users       User[]   @relation("UserCompanies") // Relación opcional
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-model Job {
-  id          String   @id @default(cuid())
-  title       String
-  description String?
-  imageUrl    String?
-  users       User[]   @relation("UserJobs")
+model Message {
+  id          Int      @id @default(autoincrement())
+  senderId    Int
+  receiverId  Int
+  content     String
   createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  sender      User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver    User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
 }
