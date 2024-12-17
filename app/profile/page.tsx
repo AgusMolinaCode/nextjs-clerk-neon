@@ -2,7 +2,7 @@ import React from 'react'
 import { getProductsByUser } from '@/lib/products'
 import { getUserById } from '@/lib/users'
 import { auth } from '@clerk/nextjs/server'
-
+import Image from 'next/image'
 const page = async () => {
   const { userId } = await auth()
 
@@ -28,15 +28,23 @@ const page = async () => {
 
   return (
     <div className=''>
-      <h1>Profile</h1>
+      <h1 className='text-center text-2xl font-bold'>Profile</h1>
       <div>
-        <h2>Productos</h2>
         {products.length === 0 ? (
           <p>No hay productos disponibles.</p>
         ) : (
-          <ul>
+          <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-auto max-w-7xl'>
             {products.map(product => (
-              <li key={product.id}>{product.title}</li>
+              <li className='flex flex-col gap-2' key={product.id}>
+                <Image
+                  src={product.imageUrl || ''}
+                  alt={product.title || ''}
+                  width={200}
+                  height={200}
+                />
+                <h2 className='text-lg font-bold'>{product.title}</h2>
+                <p className='text-sm text-gray-500'>{product.description}</p>
+              </li>
             ))}
           </ul>
         )}

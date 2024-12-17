@@ -2,7 +2,7 @@ import { getProducts } from '@/lib/products'
 import ProductCard from '@/components/ProductCard'
 
 export default async function Home() {
-  const products = await getProducts(2)
+  const products = await getProducts()
 
   return (
     <section className='pb-24 pt-40'>
