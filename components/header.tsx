@@ -15,7 +15,7 @@ import { Button } from './ui/button'
 
 export default function Header() {
   return (
-    <header className='fixed inset-x-0 top-0 z-50 bg-background/20 py-6 backdrop-blur-sm'>
+    <header className='   py-6 mb-10 '>
       <nav className='container flex items-center justify-between'>
         <Sheet>
           <SheetTrigger className='sm:hidden'>
@@ -42,6 +42,11 @@ export default function Header() {
           <ThemeToggle />
           <SignedIn>
             <UserButton />
+            <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
+              <li className=' font-bold'>
+                <Link href='/profile'>profile</Link>
+              </li>
+            </ul>
           </SignedIn>
           <SignedOut>
             <SignInButton>

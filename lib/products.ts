@@ -1,6 +1,5 @@
 import prisma from './prisma'
 
-
 export async function getProducts(
   limit?: number,
   sort: 'title' | 'createdAt' = 'createdAt',
@@ -22,4 +21,14 @@ export async function getProductBySlug(slug: string) {
       slug
     }
   })
+}
+
+export async function getProductsByUser(userId: string) {
+  const products = await prisma.product.findMany({
+    where: {
+      userId: userId
+    }
+  });
+
+  return products;
 }

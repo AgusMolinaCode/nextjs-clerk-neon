@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id               Int       @id @default(autoincrement())
+  id               String  @id @default(cuid())
   email            String    @unique
   clerkUserId      String    @unique
   firstName        String?
@@ -18,29 +18,19 @@ model User {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   products         Product[]
-  sentMessages     Message[] @relation("SentMessages")
-  receivedMessages Message[] @relation("ReceivedMessages")
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          String  @id @default(cuid())
   title       String
   slug        String   @unique
   description String?
   price       Float
   imageUrl    String?
-  userId      Int
+  userId      String
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
-model Message {
-  id         Int      @id @default(autoincrement())
-  senderId   Int
-  receiverId Int
-  content    String
-  createdAt  DateTime @default(now())
-  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
-  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-}
+
