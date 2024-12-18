@@ -3,6 +3,9 @@ import { getProductsByUser } from '@/lib/products'
 import { getUserById } from '@/lib/users'
 import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
+import Link from 'next/link'
+import { CreateProductForm } from '@/components/form/CreateProductForm'
+
 const page = async () => {
   const { userId } = await auth()
 
@@ -27,24 +30,28 @@ const page = async () => {
   const products = await getProductsByUser(user?.id)
 
   return (
-    <div className=''>
-      <h1 className='text-center text-2xl font-bold'>Profile</h1>
-      <div>
+    <div className='flex flex-col md:flex-row gap-8'>
+      <div className='lg:w-1/3'>
+        <CreateProductForm />
+      </div>
+      <div className='md:w-2/3'>
         {products.length === 0 ? (
           <p>No hay productos disponibles.</p>
         ) : (
-          <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mx-auto max-w-7xl'>
+          <ul className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
             {products.map(product => (
-              <li className='flex flex-col gap-2' key={product.id}>
-                <Image
-                  src={product.imageUrl || ''}
-                  alt={product.title || ''}
-                  width={200}
-                  height={200}
-                />
-                <h2 className='text-lg font-bold'>{product.title}</h2>
-                <p className='text-sm text-gray-500'>{product.description}</p>
-              </li>
+              <Link href={`/products/${product.slug}`} key={product.id}>
+                <li className='flex flex-col gap-2'>
+                  <Image
+                    src={product.imageUrl || ''}
+                    alt={product.title || ''}
+                    width={200}
+                    height={200}
+                  />
+                  <h2 className='text-lg font-bold'>{product.title}</h2>
+                  <p className='text-sm text-gray-500'>{product.description}</p>
+                </li>
+              </Link>
             ))}
           </ul>
         )}

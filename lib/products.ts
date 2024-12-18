@@ -1,4 +1,7 @@
 import prisma from './prisma'
+import { Product } from './utils';
+
+
 
 export async function getProducts(
   limit?: number,
@@ -31,4 +34,11 @@ export async function getProductsByUser(userId: string) {
   });
 
   return products;
+}
+
+export async function createProduct(product: Product) {
+  // Implementa la lógica para crear un producto
+  return await prisma.product.create({
+    data: product
+  });
 }
