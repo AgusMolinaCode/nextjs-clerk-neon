@@ -1,7 +1,16 @@
+'use server'
+
 import prisma from './prisma'
 import { Product } from './utils';
 
-
+export interface ProductInput {
+  title: string;
+  slug: string;
+  description?: string;
+  price: number;
+  imageUrl?: string;
+  userId: string; // Asegúrate de incluir userId
+}
 
 export async function getProducts(
   limit?: number,
@@ -36,9 +45,21 @@ export async function getProductsByUser(userId: string) {
   return products;
 }
 
-export async function createProduct(product: Product) {
-  // Implementa la lógica para crear un producto
-  return await prisma.product.create({
-    data: product
-  });
+export async function createProduct(data: ProductInput) {
+  try {
+    const product = await prisma.product.create({
+      data: {
+        title: data.title,
+        slug: data.slug,
+        description: data.description,
+        price: data.price,
+        imageUrl: data.imageUrl || '',
+        userId: data.userId
+      }
+    });
+    return { product: JSON.parse(JSON.stringify(product)), error: null };
+  } catch (error) {
+    console.error('Error al crear el producto:', error);
+    return { product: null, error: JSON.parse(JSON.stringify(error)) };
+  }
 }

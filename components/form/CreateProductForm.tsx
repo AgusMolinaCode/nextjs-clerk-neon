@@ -16,8 +16,9 @@ import {
 import { Input } from '@/components/ui/input'
 import { CreateFormSchema } from '@/lib/validation'
 import { generateSlug } from '@/constants'
+import { createProduct, ProductInput } from '@/lib/products'
 
-export function CreateProductForm() {
+export function CreateProductForm({ userId }: { userId: string }) {
   const form = useForm<z.infer<typeof CreateFormSchema>>({
     resolver: zodResolver(CreateFormSchema),
     defaultValues: {
@@ -36,14 +37,32 @@ export function CreateProductForm() {
 
   form.setValue('slug', generateSlug(title))
 
-  function onSubmit(values: z.infer<typeof CreateFormSchema>) {
-    console.log(values) // Muestra los valores por consola
+  const processForm = async (values: z.infer<typeof CreateFormSchema>) => {
+    const productData: ProductInput = {
+      title: values.title,
+      slug: generateSlug(values.title),
+      description: values.description,
+      price: values.price,
+      imageUrl: values.imageUrl[0] || '',
+      userId: userId
+    }
+
+    try {
+      const { product, error } = await createProduct(productData);
+      if (error) {
+        console.error('Error al crear el producto:', error);
+      } else {
+        console.log('Producto creado con éxito:', product);
+      }
+    } catch (error) {
+      console.error('Error al crear el producto:', error);
+    }
   }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(processForm)}
         className='mx-auto max-w-xs space-y-8'
       >
         <FormField

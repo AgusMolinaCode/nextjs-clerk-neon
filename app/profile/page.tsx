@@ -32,7 +32,7 @@ const page = async () => {
   return (
     <div className='flex flex-col md:flex-row gap-8'>
       <div className='lg:w-1/3'>
-        <CreateProductForm />
+        <CreateProductForm userId={user.id} />
       </div>
       <div className='md:w-2/3'>
         {products.length === 0 ? (

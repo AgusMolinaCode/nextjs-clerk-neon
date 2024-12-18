@@ -7,13 +7,10 @@ export function cn(...inputs: ClassValue[]) {
 
 
 export type Product = {
-  id: string;
   title: string;
   slug: string;
   description?: string;
   price: number;
   imageUrl?: string;
   userId: string;
-  createdAt: Date;
-  updatedAt: Date;
 }
