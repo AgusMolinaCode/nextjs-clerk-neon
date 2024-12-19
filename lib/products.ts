@@ -47,13 +47,29 @@ export async function getProductsByUser(userId: string) {
 
 export async function createProduct(data: ProductInput) {
   try {
+    // Verificar si el slug ya existe
+    let slug = data.slug;
+    let existingProduct = await prisma.product.findUnique({
+      where: { slug }
+    });
+
+    // Si el slug ya existe, generar uno nuevo
+    let suffix = 1;
+    while (existingProduct) {
+      slug = `${data.slug}-${suffix}`;
+      existingProduct = await prisma.product.findUnique({
+        where: { slug }
+      });
+      suffix++;
+    }
+
     const product = await prisma.product.create({
       data: {
         title: data.title,
-        slug: data.slug,
+        slug: slug, // Usa el slug único
         description: data.description,
         price: data.price,
-        imageUrl: data.imageUrl || '',
+        imageUrl: data.imageUrl,
         userId: data.userId
       }
     });

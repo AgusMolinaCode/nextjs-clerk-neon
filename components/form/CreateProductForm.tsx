@@ -44,7 +44,7 @@ export function CreateProductForm({ userId }: { userId: string }) {
       slug: generateSlug(values.title),
       description: values.description,
       price: values.price,
-      imageUrl: values.imageUrl[0] || '',
+      imageUrl: JSON.stringify(values.imageUrl),
       userId: userId
     }
 
@@ -109,8 +109,8 @@ export function CreateProductForm({ userId }: { userId: string }) {
           endpoint='imageUploader'
           onClientUploadComplete={res => {
             if (res && res.length > 0) {
-              const imageUrl = res[0].url; // Asume que res es un array de objetos con una propiedad url
-              form.setValue('imageUrl', [imageUrl]); // Actualiza el campo imageUrl con la URL de la imagen
+              const imageUrls = res.map(file => file.url);
+              form.setValue('imageUrl', imageUrls);
               console.log('Files: ', res)
               alert('Upload Completed')
             }

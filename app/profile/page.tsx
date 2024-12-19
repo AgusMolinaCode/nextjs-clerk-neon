@@ -39,21 +39,37 @@ const page = async () => {
           <p>No hay productos disponibles.</p>
         ) : (
           <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-            {products.map(product => (
-              <Link href={`/products/${product.slug}`} key={product.id}>
-                <li className='flex flex-col gap-2'>
-                  <h2 className='text-lg font-bold'>{product.title}</h2>
-                  <Image
-                    src={product.imageUrl || '/assets/images/no-product.png'}
-                    alt={product.title}
-                    width={200}
-                    height={200}
-                    priority
-                    className='rounded-md border-2 border-gray-200 object-cover dark:border-none'
-                  />
-                </li>
-              </Link>
-            ))}
+            {products.map(product => {
+              let firstImageUrl = '/assets/images/no-product.png';
+              try {
+                if (product.imageUrl) {
+                  if (product.imageUrl.startsWith('[')) {
+                    const imageUrls = JSON.parse(product.imageUrl);
+                    firstImageUrl = imageUrls[0];
+                  } else {
+                    firstImageUrl = product.imageUrl;
+                  }
+                }
+              } catch (error) {
+                console.error('Error parsing imageUrl:', error);
+              }
+
+              return (
+                <Link href={`/products/${product.slug}`} key={product.id}>
+                  <li className='flex flex-col gap-2'>
+                    <h2 className='text-lg font-bold'>{product.title}</h2>
+                    <Image
+                      src={firstImageUrl}
+                      alt={product.title}
+                      width={200}
+                      height={200}
+                      priority
+                      className='rounded-md border-2 border-gray-200 object-cover dark:border-none'
+                    />
+                  </li>
+                </Link>
+              );
+            })}
           </ul>
         )}
       </div>

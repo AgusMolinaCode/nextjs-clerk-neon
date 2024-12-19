@@ -13,3 +13,12 @@ export type Product = {
   imageUrl?: string
   userId: string
 }
+
+export type ProductInput = {
+  title: string
+  slug: string
+  description?: string
+  price: number
+  imageUrl: string
+  userId: string
+}
