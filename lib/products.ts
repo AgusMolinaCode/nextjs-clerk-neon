@@ -1,7 +1,7 @@
 'use server'
 
 import prisma from './prisma'
-import { Product } from './utils';
+import { revalidatePath } from 'next/cache';
 
 export interface ProductInput {
   title: string;
@@ -57,6 +57,9 @@ export async function createProduct(data: ProductInput) {
         userId: data.userId
       }
     });
+
+    revalidatePath('/profile');
+
     return { product: JSON.parse(JSON.stringify(product)), error: null };
   } catch (error) {
     console.error('Error al crear el producto:', error);

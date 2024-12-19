@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input'
 import { CreateFormSchema } from '@/lib/validation'
 import { generateSlug } from '@/constants'
 import { createProduct, ProductInput } from '@/lib/products'
+import { UploadButton } from '@/utils/uploadthing'
 
 export function CreateProductForm({ userId }: { userId: string }) {
   const form = useForm<z.infer<typeof CreateFormSchema>>({
@@ -48,14 +49,14 @@ export function CreateProductForm({ userId }: { userId: string }) {
     }
 
     try {
-      const { product, error } = await createProduct(productData);
+      const { product, error } = await createProduct(productData)
       if (error) {
-        console.error('Error al crear el producto:', error);
+        console.error('Error al crear el producto:', error)
       } else {
-        console.log('Producto creado con éxito:', product);
+        console.log('Producto creado con éxito:', product)
       }
     } catch (error) {
-      console.error('Error al crear el producto:', error);
+      console.error('Error al crear el producto:', error)
     }
   }
 
@@ -104,27 +105,19 @@ export function CreateProductForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name='imageUrl'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Imágenes (máximo 4)</FormLabel>
-              <FormControl>
-                <Input
-                  type='file'
-                  multiple
-                  accept='image/*'
-                  onChange={e => {
-                    const files = Array.from(e.target.files || [])
-                    const urls = files.map(file => URL.createObjectURL(file))
-                    form.setValue('imageUrl', urls)
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <UploadButton
+          endpoint='imageUploader'
+          onClientUploadComplete={res => {
+            if (res && res.length > 0) {
+              const imageUrl = res[0].url; // Asume que res es un array de objetos con una propiedad url
+              form.setValue('imageUrl', [imageUrl]); // Actualiza el campo imageUrl con la URL de la imagen
+              console.log('Files: ', res)
+              alert('Upload Completed')
+            }
+          }}
+          onUploadError={(error: Error) => {
+            alert(`ERROR! ${error.message}`)
+          }}
         />
         <Button type='submit'>Crear Producto</Button>
       </form>
