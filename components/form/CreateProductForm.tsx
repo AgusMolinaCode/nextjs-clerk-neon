@@ -105,19 +105,38 @@ export function CreateProductForm({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        <UploadButton
-          endpoint='imageUploader'
-          onClientUploadComplete={res => {
-            if (res && res.length > 0) {
-              const imageUrls = res.map(file => file.url);
-              form.setValue('imageUrl', imageUrls);
-              console.log('Files: ', res)
-              alert('Upload Completed')
-            }
-          }}
-          onUploadError={(error: Error) => {
-            alert(`ERROR! ${error.message}`)
-          }}
+        <FormField
+          control={form.control}
+          name='imageUrl'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Imágenes</FormLabel>
+              <FormControl>
+                <UploadButton
+                  appearance={{
+                    button: "bg-indigo-500 ut-button:ut-ready:bg-indigo-500/50 w-full",
+                    container: "w-full",
+                    allowedContent: "w-full",
+                    
+                  }}
+                  
+                  endpoint='imageUploader'
+                  onClientUploadComplete={res => {
+                    if (res && res.length > 0) {
+                      const imageUrls = res.map(file => file.url)
+                      form.setValue('imageUrl', imageUrls)
+
+                      alert('Upload Completed')
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    alert(`ERROR! ${error.message}`)
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
         <Button type='submit'>Crear Producto</Button>
       </form>

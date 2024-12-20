@@ -59,7 +59,7 @@ const page = async () => {
                   <li className='flex flex-col gap-2'>
                     <h2 className='text-lg font-bold'>{product.title}</h2>
                     <Image
-                      src={firstImageUrl}
+                      src={firstImageUrl || '/assets/images/no-product.png'}
                       alt={product.title}
                       width={200}
                       height={200}

@@ -14,7 +14,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
     <div className='border p-4'>
       <Link href={`/products/${product.slug}`}>
         <img
-          src={product.imageUrl}
+          src={product.imageUrl || '/assets/images/no-product.png'}
           alt={product.title}
           className='h-48 w-full object-cover'
         />

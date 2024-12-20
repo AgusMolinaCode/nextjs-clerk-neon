@@ -16,7 +16,7 @@ export default async function Home() {
                 ...product, 
                 id: String(product.id), 
                 description: product.description || 'Descripción no disponible',
-                imageUrl: product.imageUrl || 'ruta/a/imagen/predeterminada.jpg'
+                imageUrl: product.imageUrl || '/assets/images/no-product.png'
               }} 
             />
           ))}

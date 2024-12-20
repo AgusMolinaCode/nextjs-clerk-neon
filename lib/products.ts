@@ -1,15 +1,16 @@
 'use server'
 
+import { generateSlug } from '@/constants'
 import prisma from './prisma'
-import { revalidatePath } from 'next/cache';
+import { revalidatePath } from 'next/cache'
 
 export interface ProductInput {
-  title: string;
-  slug: string;
-  description?: string;
-  price: number;
-  imageUrl?: string;
-  userId: string; // Asegúrate de incluir userId
+  title: string
+  slug: string
+  description?: string
+  price: number
+  imageUrl?: string
+  userId: string
 }
 
 export async function getProducts(
@@ -40,45 +41,43 @@ export async function getProductsByUser(userId: string) {
     where: {
       userId: userId
     }
-  });
+  })
 
-  return products;
+  return products
 }
 
 export async function createProduct(data: ProductInput) {
   try {
-    // Verificar si el slug ya existe
-    let slug = data.slug;
+    let slug = generateSlug(data.title)
     let existingProduct = await prisma.product.findUnique({
       where: { slug }
-    });
+    })
 
-    // Si el slug ya existe, generar uno nuevo
-    let suffix = 1;
+    let suffix = 1
     while (existingProduct) {
-      slug = `${data.slug}-${suffix}`;
+      slug = `${generateSlug(data.title)}-${suffix}`
       existingProduct = await prisma.product.findUnique({
         where: { slug }
-      });
-      suffix++;
+      })
+      suffix++
     }
 
     const product = await prisma.product.create({
       data: {
         title: data.title,
-        slug: slug, // Usa el slug único
+        slug: slug,
         description: data.description,
         price: data.price,
         imageUrl: data.imageUrl,
         userId: data.userId
       }
-    });
+    })
 
-    revalidatePath('/profile');
+    revalidatePath('/profile')
 
-    return { product: JSON.parse(JSON.stringify(product)), error: null };
+    return { product: JSON.parse(JSON.stringify(product)), error: null }
   } catch (error) {
-    console.error('Error al crear el producto:', error);
-    return { product: null, error: JSON.parse(JSON.stringify(error)) };
+    console.error('Error al crear el producto:', error)
+    return { product: null, error: JSON.parse(JSON.stringify(error)) }
   }
 }
