@@ -31,44 +31,49 @@ const page = async () => {
 
   return (
     <div className='flex flex-col gap-8 md:flex-row'>
-      <div className='lg:w-1/3'>
+      <div className='w-full px-4 lg:w-1/4 mx-auto'>
         <CreateProductForm userId={user.id} />
       </div>
-      <div className='md:w-2/3'>
+      <div className='w-full lg:w-3/4'>
         {products.length === 0 ? (
           <p>No hay productos disponibles.</p>
         ) : (
-          <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+          <ul className='grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3 px-4'>
             {products.map(product => {
-              let firstImageUrl = '/assets/images/no-product.png';
+              let firstImageUrl = '/assets/images/no-product.png'
               try {
                 if (product.imageUrl) {
                   if (product.imageUrl.startsWith('[')) {
-                    const imageUrls = JSON.parse(product.imageUrl);
-                    firstImageUrl = imageUrls[0];
+                    const imageUrls = JSON.parse(product.imageUrl)
+                    firstImageUrl = imageUrls[0]
                   } else {
-                    firstImageUrl = product.imageUrl;
+                    firstImageUrl = product.imageUrl
                   }
                 }
               } catch (error) {
-                console.error('Error parsing imageUrl:', error);
+                console.error('Error parsing imageUrl:', error)
               }
 
               return (
-                <Link href={`/products/${product.slug}`} key={product.id}>
+                <Link
+                  href={`/products/${product.slug}`}
+                  key={product.id}
+                  className='relative block'
+                >
                   <li className='flex flex-col gap-2'>
-                    <h2 className='text-lg font-bold'>{product.title}</h2>
                     <Image
                       src={firstImageUrl || '/assets/images/no-product.png'}
                       alt={product.title}
-                      width={200}
-                      height={200}
-                      priority
-                      className='rounded-md border-2 border-gray-200 object-cover dark:border-none'
+                      width={300}
+                      height={300}
+                      className='h-[300px] w-full rounded-md object-cover' 
                     />
+                    <div className=''>
+                      <p className='absolute left-2 top-1 bg-black rounded-xl px-2 py-1 text-white'>{product.title}</p>
+                    </div>
                   </li>
                 </Link>
-              );
+              )
             })}
           </ul>
         )}

@@ -67,3 +67,14 @@
     @apply bg-background font-sans text-foreground;
   }
 }
+
+/* styles.css o tu archivo CSS global */
+input[type='number'] {
+  -moz-appearance: textfield; /* Para Firefox */
+}
+
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Para Chrome y Safari */
+  margin: 0; /* Elimina el margen */
+}
