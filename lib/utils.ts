@@ -8,9 +8,9 @@ export function cn(...inputs: ClassValue[]) {
 export type Product = {
   title: string
   slug: string
-  description?: string
+  description?: string | null
   price: number
-  imageUrl?: string
+  imageUrl?: string | null
   userId: string
 }
 

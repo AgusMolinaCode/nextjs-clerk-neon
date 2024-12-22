@@ -66,7 +66,7 @@ export function CreateProductForm({ userId }: { userId: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(processForm)}
-        className=' md:max-w-md space-y-8 rounded-md border p-2 dark:border-gray-800'
+        className='md:max-w-md space-y-8 rounded-md border p-2 dark:border-gray-800 bg-gray-50 dark:bg-gray-950'
       >
         <FormField
           control={form.control}

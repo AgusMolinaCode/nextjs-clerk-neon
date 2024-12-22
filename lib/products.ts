@@ -36,11 +36,12 @@ export async function getProductBySlug(slug: string) {
   })
 }
 
-export async function getProductsByUser(userId: string) {
+export async function getProductsByUser(userId: string, limit?: number) {
   const products = await prisma.product.findMany({
     where: {
       userId: userId
-    }
+    },
+    take: limit
   })
 
   return products

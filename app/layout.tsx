@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Playfair_Display, Poppins } from 'next/font/google'
 import { cn } from '@/lib/utils'
-
 
 import Providers from '@/components/providers'
 import Header from '@/components/header'
@@ -29,6 +28,11 @@ const geistMono = localFont({
   weight: '100 900'
 })
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+const poppins = Poppins({
+  subsets: ['latin'],
+  variable: '--font-sans',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
+})
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-serif'
@@ -50,10 +54,7 @@ export default function RootLayout({
         <body
           className={cn(
             'flex min-h-screen flex-col',
-            geistSans.variable,
-            geistMono.variable,
-            inter.variable,
-            playfair.variable
+            poppins.variable
           )}
         >
           <Providers>
