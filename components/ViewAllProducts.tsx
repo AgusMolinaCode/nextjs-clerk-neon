@@ -30,8 +30,12 @@ const ViewAllProducts = ({ products }: { products: Product[] }) => {
               let firstImageUrl = '/assets/images/no-product.png';
               try {
                 if (product.imageUrl) {
-                  const imageUrls = JSON.parse(product.imageUrl);
-                  firstImageUrl = imageUrls[0] || firstImageUrl;
+                  if (product.imageUrl.startsWith('[')) {
+                    const imageUrls = JSON.parse(product.imageUrl);
+                    firstImageUrl = imageUrls[0] || firstImageUrl;
+                  } else {
+                    firstImageUrl = product.imageUrl; // Usar directamente si no es JSON
+                  }
                 }
               } catch (error) {
                 console.error('Error parsing imageUrl:', error);

@@ -7,9 +7,9 @@ import { revalidatePath } from 'next/cache'
 export interface ProductInput {
   title: string
   slug: string
-  description?: string
+  description?: string | null
   price: number
-  imageUrl?: string
+  imageUrl?: string | null
   userId: string
 }
 
