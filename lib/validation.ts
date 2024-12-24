@@ -12,3 +12,5 @@ export const CreateFormSchema = z.object({
     .min(1, { message: 'Debes subir al menos una imagen.' })
     .max(3, { message: 'Puedes subir un máximo de 3 imágenes.' })
 })
+
+export const UpdateFormSchema = CreateFormSchema.partial()

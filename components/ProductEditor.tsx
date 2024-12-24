@@ -1,16 +1,16 @@
+
 import { getProductBySlug } from '@/lib/products'
-import { CircleX, Edit, X } from 'lucide-react'
+import { Edit } from 'lucide-react'
+import React, { useState } from 'react'
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
 import ProductEditorForm from './form/ProductEditorForm'
-import { Cross2Icon } from '@radix-ui/react-icons'
 
 const ProductEditor = async ({ slug }: { slug: string }) => {
   const product = await getProductBySlug(slug)

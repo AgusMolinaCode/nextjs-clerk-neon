@@ -45,11 +45,11 @@ const page = async () => {
   }))
 
   return (
-    <div className='flex flex-col gap-2 md:flex-row'>
-      <div className='mx-auto w-full px-4 lg:w-1/4'>
+    <div className='flex gap-2 md:flex-row px-4'>
+      <div className='mx-auto w-full lg:w-1/4'>
         <ProductForm userId={user.id} />
       </div>
-      <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-3/4'>
+      <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-1/4'>
         <div className='flex w-full items-center justify-between gap-2 md:max-w-[360px]'>
           <h1 className='text-lg font-bold'>Mis Publicaciones</h1>
         </div>
@@ -107,6 +107,7 @@ const page = async () => {
           <Insights />
         </div>
       </div>
+      <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-3/4 bg-red-500'></div>
     </div>
   )
 }

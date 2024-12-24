@@ -5,6 +5,7 @@ import prisma from './prisma'
 import { revalidatePath } from 'next/cache'
 
 export interface ProductInput {
+  id?: string
   title: string
   slug: string
   description?: string | null
@@ -79,6 +80,33 @@ export async function createProduct(data: ProductInput) {
     return { product: JSON.parse(JSON.stringify(product)), error: null }
   } catch (error) {
     console.error('Error al crear el producto:', error)
+    return { product: null, error: JSON.parse(JSON.stringify(error)) }
+  }
+}
+
+export async function updateProduct(data: ProductInput) {
+  if (!data.id) {
+    throw new Error('El id del producto es necesario para actualizarlo.')
+  }
+
+  try {
+    const product = await prisma.product.update({
+      where: { id: data.id },
+      data: {
+        title: data.title,
+        slug: data.slug,
+        description: data.description,
+        price: data.price,
+        imageUrl: data.imageUrl,
+        userId: data.userId
+      }
+    })
+
+    revalidatePath('/profile')
+
+    return { product: JSON.parse(JSON.stringify(product)), error: null }
+  } catch (error) {
+    console.error('Error al actualizar el producto:', error)
     return { product: null, error: JSON.parse(JSON.stringify(error)) }
   }
 }
