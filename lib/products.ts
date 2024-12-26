@@ -110,3 +110,14 @@ export async function updateProduct(data: ProductInput) {
     return { product: null, error: JSON.parse(JSON.stringify(error)) }
   }
 }
+
+export async function deleteProduct(id: string) {
+  try {
+    await prisma.product.delete({
+      where: { id }
+    })
+    revalidatePath('/profile')
+  } catch (error) {
+    console.error('Error al eliminar el producto:', error)
+  }
+}

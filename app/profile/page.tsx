@@ -1,5 +1,5 @@
 import React from 'react'
-import { getProductsByUser } from '@/lib/products'
+import { getProductsByUser, deleteProduct } from '@/lib/products'
 import { getUserById } from '@/lib/users'
 import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
@@ -10,6 +10,8 @@ import Insights from '@/components/Insights'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import ProductEditor from '@/components/ProductEditor'
+import { Trash } from 'lucide-react'
+import ProductDelete from '@/components/ProductDelete'
 
 const page = async () => {
   const { userId } = await auth()
@@ -43,6 +45,18 @@ const page = async () => {
     description: product.description ?? '',
     imageUrl: product.imageUrl ?? '/assets/images/no-product.png'
   }))
+
+  const handleDelete = async (id: string) => {
+    if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+      try {
+        await deleteProduct(id)
+        alert('Producto eliminado con éxito')
+        // Aquí podrías actualizar el estado o recargar la página para reflejar los cambios
+      } catch (error) {
+        console.error('Error al eliminar el producto:', error)
+      }
+    }
+  }
 
   return (
     <div className='flex gap-2 md:flex-row px-4'>
@@ -96,7 +110,10 @@ const page = async () => {
                         </p>
                       </div>
                     </Link>
-                    <ProductEditor product={product} />
+                    <div className='flex items-center gap-2'>
+                      <ProductEditor product={product} />
+                      <ProductDelete productId={product.id} />
+                    </div>
                   </div>
                 )
               })}
