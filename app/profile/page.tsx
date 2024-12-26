@@ -124,7 +124,15 @@ const page = async () => {
           <Insights />
         </div>
       </div>
-      <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-3/4 bg-red-500'></div>
+      <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-3/4 '>
+        <Image
+          src='/assets/images/map.png'
+          alt='mapa'
+          className='w-full h-full object-cover'
+          width={1000}
+          height={1000}
+        />
+      </div>
     </div>
   )
 }
