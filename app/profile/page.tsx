@@ -96,7 +96,7 @@ const page = async () => {
                         </p>
                       </div>
                     </Link>
-                    <ProductEditor slug={product.slug} />
+                    <ProductEditor product={product} />
                   </div>
                 )
               })}

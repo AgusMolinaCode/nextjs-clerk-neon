@@ -19,8 +19,11 @@ import { UploadButton } from '@/utils/uploadthing'
 import { ImageUp } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
 import ButtonSubmit from '../ButtonSubmit'
+import { useToast } from "@/hooks/use-toast"
+import Image from 'next/image'
 
 export function ProductForm({ userId }: { userId: string }) {
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof CreateFormSchema>>({
     resolver: zodResolver(CreateFormSchema),
     defaultValues: {
@@ -54,8 +57,14 @@ export function ProductForm({ userId }: { userId: string }) {
       if (error) {
         console.error('Error al crear el producto:', error)
       } else {
-        console.log('Producto creado con éxito:', product)
+        toast({
+          duration: 3000,
+          title: 'Producto creado con éxito',
+          description: 'El producto ha sido creado correctamente',
+          variant: 'default'
+        })
       }
+      form.reset()
     } catch (error) {
       console.error('Error al crear el producto:', error)
     }
@@ -65,8 +74,9 @@ export function ProductForm({ userId }: { userId: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(processForm)}
-        className='space-y-8 rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950 md:max-w-md'
+        className='space-y-2 h-full rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950 md:max-w-md flex flex-col justify-between'
       >
+        <div className='h-full'>
         <FormField
           control={form.control}
           name='title'
@@ -154,6 +164,12 @@ export function ProductForm({ userId }: { userId: string }) {
                     if (res && res.length > 0) {
                       const imageUrls = res.map(file => file.url)
                       form.setValue('imageUrl', imageUrls)
+                      toast({
+                        duration: 3000,
+                        title: 'Imágenes subidas con éxito',
+                        description: 'Las imágenes han sido subidas correctamente, puedes continuar con el siguiente paso',
+                        variant: 'default'
+                      })
                     }
                   }}
                   onUploadError={(error: Error) => {
@@ -162,10 +178,31 @@ export function ProductForm({ userId }: { userId: string }) {
                 />
               </FormControl>
               <FormMessage />
+              <div className='pt-2 grid grid-cols-3 gap-2 justify-center items-center mx-auto w-full place-items-center'>
+                {field.value.map((url: string, index: number) => (
+                  <Image
+                    key={index}
+                    src={url}
+                    alt={`Imagen ${index + 1}`}
+                    width={120}
+                    height={120}
+                    className='rounded-md object-cover  h-20 w-20'
+                  />
+                ))}
+                {[...Array(3 - field.value.length)].map((_, index) => (
+                  <div
+                    key={`placeholder-${index}`}
+                    className='relative h-20 w-20 rounded-md border border-dashed border-gray-500 bg-gray-100 dark:bg-gray-900 flex items-center justify-center'
+                  >
+                    <span className='text-gray-500 text-xl'>{field.value.length + index + 1}</span>
+                  </div>
+                ))}
+              </div>
             </FormItem>
           )}
         />
 
+        </div>
         <ButtonSubmit>Crear publicación</ButtonSubmit>
       </form>
     </Form>

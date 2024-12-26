@@ -1,5 +1,5 @@
+'use client'
 
-import { getProductBySlug } from '@/lib/products'
 import { Edit } from 'lucide-react'
 import React, { useState } from 'react'
 
@@ -11,16 +11,14 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import ProductEditorForm from './form/ProductEditorForm'
+import { Product } from '@/lib/utils'
 
-const ProductEditor = async ({ slug }: { slug: string }) => {
-  const product = await getProductBySlug(slug)
-  if (!product) {
-    return <div>Producto no encontrado</div>
-  }
+const ProductEditor = ({ product }: { product: Product }) => {
+  const [open, setOpen] = useState(false)
 
   return (
     <div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger className='text-xs font-semibold'>
           <Edit className='h-4 w-4 text-gray-500' />
         </DialogTrigger>
@@ -30,7 +28,7 @@ const ProductEditor = async ({ slug }: { slug: string }) => {
               Editar {product.title}
             </DialogTitle>
           </DialogHeader>
-          <ProductEditorForm product={product} />
+          <ProductEditorForm product={product} onClose={() => setOpen(false)} />
         </DialogContent>
       </Dialog>
     </div>

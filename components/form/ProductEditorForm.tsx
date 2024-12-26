@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
+import { useToast } from '@/hooks/use-toast'
 
 import {
   Form,
@@ -26,7 +27,14 @@ import { Textarea } from '../ui/textarea'
 import Image from 'next/image'
 import ButtonSubmit from '../ButtonSubmit'
 
-const ProductEditorForm = ({ product }: { product: Product }) => {
+const ProductEditorForm = ({
+  product,
+  onClose
+}: {
+  product: Product
+  onClose: () => void
+}) => {
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof UpdateFormSchema>>({
     resolver: zodResolver(UpdateFormSchema),
     defaultValues: {
@@ -62,6 +70,13 @@ const ProductEditorForm = ({ product }: { product: Product }) => {
         console.error('Error al actualizar el producto:', error)
       } else {
         console.log('Producto actualizado con éxito:', product)
+        toast({
+          duration: 3000,
+          title: 'Producto actualizado con éxito',
+          description: 'El producto ha sido actualizado correctamente',
+          variant: 'default'
+        })
+        onClose()
       }
     } catch (error) {
       console.error('Error al actualizar el producto:', error)
@@ -166,6 +181,13 @@ const ProductEditorForm = ({ product }: { product: Product }) => {
                       if (res && res.length > 0) {
                         const imageUrls = res.map(file => file.url)
                         form.setValue('imageUrl', imageUrls)
+                        toast({
+                          duration: 3000,
+                          title: 'Imágenes subidas con éxito',
+                          description:
+                            'Las imágenes han sido subidas correctamente, puedes continuar con el siguiente paso',
+                          variant: 'default'
+                        })
                       }
                     }}
                     onUploadError={(error: Error) => {
@@ -174,15 +196,15 @@ const ProductEditorForm = ({ product }: { product: Product }) => {
                   />
                 </FormControl>
                 <FormMessage />
-                <div className='mt-2 flex gap-2'>
+                <div className='mx-auto grid w-full grid-cols-3 place-items-center items-center justify-center gap-2 pt-2'>
                   {(field.value ?? []).map((url: string, index: number) => (
                     <Image
                       key={index}
                       src={url}
                       alt={`Imagen ${index + 1}`}
-                      width={50}
-                      height={50}
-                      className='rounded-md'
+                      width={120}
+                      height={120}
+                      className='h-20 w-20 rounded-md object-cover'
                     />
                   ))}
                 </div>
