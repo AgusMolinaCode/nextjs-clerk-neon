@@ -19,7 +19,7 @@ import { UploadButton } from '@/utils/uploadthing'
 import { ImageUp } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
 import ButtonSubmit from '../ButtonSubmit'
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from '@/hooks/use-toast'
 import Image from 'next/image'
 
 export function ProductForm({ userId }: { userId: string }) {
@@ -74,134 +74,145 @@ export function ProductForm({ userId }: { userId: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(processForm)}
-        className='space-y-2 h-full rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950 md:max-w-md flex flex-col justify-between'
+        className='flex h-full w-full flex-col justify-between space-y-2 rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950'
       >
         <div className='h-full'>
-        <FormField
-          control={form.control}
-          name='title'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Título</FormLabel>
-              <FormControl>
-                <Input placeholder='Título del producto' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='description'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Descripción</FormLabel>
-              <FormControl>
-                <Textarea placeholder='Descripción del producto' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='price'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Precio</FormLabel>
-              <FormControl>
-                <Input
-                  type='number'
-                  placeholder='0.00'
-                  {...field}
-                  className='appearance-none'
-                  style={{ MozAppearance: 'textfield' }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='imageUrl'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Imágenes</FormLabel>
-              <FormControl>
-                <UploadButton
-                  appearance={{
-                    button:
-                      'w-full bg-transparent border border-dashed dark:border-gray-500 rounded-md p-2 h-20',
-                    container: 'w-full',
-                    allowedContent: 'w-full'
-                  }}
-                  content={{
-                    button: ({ ready, isUploading }) => {
-                      if (!ready) return <p className='text-center'>Preparando...</p>
-                      if (isUploading) return <p className='text-center'>Enviando...</p>
-                      return (
-                        <div className=''>
-                          <ImageUp className='h-8 w-8 text-gray-400' />
-                        </div>
-                      )
-                    },
-                    allowedContent: ({ ready, fileTypes, isUploading }) => {
-                      if (!ready)
-                        return <p className='text-center'>Verificando tipos de archivo permitidos...</p>
-                      if (isUploading) return <p className='text-center'>Enviando archivo...</p>
-                      return (
-                        <div className='flex flex-col gap-2'>
-                          <p className='text-center'>
-                            Puede subir máximo 3 archivos
-                          </p>
-                        </div>
-                      )
-                    }
-                  }}
-                  endpoint='imageUploader'
-                  onClientUploadComplete={res => {
-                    if (res && res.length > 0) {
-                      const imageUrls = res.map(file => file.url)
-                      form.setValue('imageUrl', imageUrls)
-                      toast({
-                        duration: 3000,
-                        title: 'Imágenes subidas con éxito',
-                        description: 'Las imágenes han sido subidas correctamente, puedes continuar con el siguiente paso',
-                        variant: 'default'
-                      })
-                    }
-                  }}
-                  onUploadError={(error: Error) => {
-                    console.log(error)
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-              <div className='pt-2 grid grid-cols-3 gap-2 justify-center items-center mx-auto w-full place-items-center'>
-                {field.value.map((url: string, index: number) => (
-                  <Image
-                    key={index}
-                    src={url}
-                    alt={`Imagen ${index + 1}`}
-                    width={120}
-                    height={120}
-                    className='rounded-md object-cover  h-20 w-20'
+          <FormField
+            control={form.control}
+            name='title'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Título</FormLabel>
+                <FormControl>
+                  <Input placeholder='Título del producto' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='description'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Descripción</FormLabel>
+                <FormControl>
+                  <Textarea placeholder='Descripción del producto' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='price'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Precio</FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='0.00'
+                    {...field}
+                    className='appearance-none'
+                    style={{ MozAppearance: 'textfield' }}
                   />
-                ))}
-                {[...Array(3 - field.value.length)].map((_, index) => (
-                  <div
-                    key={`placeholder-${index}`}
-                    className='relative h-20 w-20 rounded-md border border-dashed border-gray-500 bg-gray-100 dark:bg-gray-900 flex items-center justify-center'
-                  >
-                    <span className='text-gray-500 text-xl'>{field.value.length + index + 1}</span>
-                  </div>
-                ))}
-              </div>
-            </FormItem>
-          )}
-        />
-
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='imageUrl'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Imágenes</FormLabel>
+                <FormControl>
+                  <UploadButton
+                    appearance={{
+                      button:
+                        'w-full bg-transparent border border-dashed dark:border-gray-500 rounded-md p-2 h-20',
+                      container: 'w-full',
+                      allowedContent: 'w-full'
+                    }}
+                    content={{
+                      button: ({ ready, isUploading }) => {
+                        if (!ready)
+                          return <p className='text-center'>Preparando...</p>
+                        if (isUploading)
+                          return <p className='text-center'>Enviando...</p>
+                        return (
+                          <div className=''>
+                            <ImageUp className='h-8 w-8 text-gray-400' />
+                          </div>
+                        )
+                      },
+                      allowedContent: ({ ready, fileTypes, isUploading }) => {
+                        if (!ready)
+                          return (
+                            <p className='text-center'>
+                              Verificando tipos de archivo permitidos...
+                            </p>
+                          )
+                        if (isUploading)
+                          return (
+                            <p className='text-center'>Enviando archivo...</p>
+                          )
+                        return (
+                          <div className='flex flex-col gap-2'>
+                            <p className='text-center'>
+                              Puede subir máximo 3 archivos
+                            </p>
+                          </div>
+                        )
+                      }
+                    }}
+                    endpoint='imageUploader'
+                    onClientUploadComplete={res => {
+                      if (res && res.length > 0) {
+                        const imageUrls = res.map(file => file.url)
+                        form.setValue('imageUrl', imageUrls)
+                        toast({
+                          duration: 3000,
+                          title: 'Imágenes subidas con éxito',
+                          description:
+                            'Las imágenes han sido subidas correctamente, puedes continuar con el siguiente paso',
+                          variant: 'default'
+                        })
+                      }
+                    }}
+                    onUploadError={(error: Error) => {
+                      console.log(error)
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+                <div className='mx-auto grid w-full grid-cols-3 place-items-center items-center justify-center gap-2 pt-2'>
+                  {field.value.map((url: string, index: number) => (
+                    <Image
+                      key={index}
+                      src={url}
+                      alt={`Imagen ${index + 1}`}
+                      width={120}
+                      height={120}
+                      className='h-20 w-20 rounded-md object-cover'
+                    />
+                  ))}
+                  {[...Array(3 - field.value.length)].map((_, index) => (
+                    <div
+                      key={`placeholder-${index}`}
+                      className='relative flex h-20 w-20 items-center justify-center rounded-md border border-dashed border-gray-500 bg-gray-100 dark:bg-gray-900'
+                    >
+                      <span className='text-xl text-gray-500'>
+                        {field.value.length + index + 1}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </FormItem>
+            )}
+          />
         </div>
         <ButtonSubmit>Crear publicación</ButtonSubmit>
       </form>

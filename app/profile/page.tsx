@@ -46,22 +46,19 @@ const page = async () => {
     imageUrl: product.imageUrl ?? '/assets/images/no-product.png'
   }))
 
-  const handleDelete = async (id: string) => {
-    if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-      try {
-        await deleteProduct(id)
-        alert('Producto eliminado con éxito')
-        // Aquí podrías actualizar el estado o recargar la página para reflejar los cambios
-      } catch (error) {
-        console.error('Error al eliminar el producto:', error)
-      }
-    }
-  }
-
   return (
-    <div className='flex gap-2 md:flex-row px-4'>
-      <div className='mx-auto w-full lg:w-1/4'>
+    <div className='flex gap-2 px-4 md:flex-row'>
+      <div className='mx-auto w-full lg:w-3/4 flex  justify-between'>
         <ProductForm userId={user.id} />
+        <div className='grid w-full place-items-center px-4 md:place-items-start'>
+          <Image
+            src='/assets/images/map.png'
+            alt='mapa'
+            className='h-full w-full object-cover'
+            width={1000}
+            height={1000}
+          />
+        </div>
       </div>
       <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-1/4'>
         <div className='flex w-full items-center justify-between gap-2 md:max-w-[360px]'>
@@ -123,15 +120,6 @@ const page = async () => {
         <div className='mt-[1rem] w-full'>
           <Insights />
         </div>
-      </div>
-      <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-3/4 '>
-        <Image
-          src='/assets/images/map.png'
-          alt='mapa'
-          className='w-full h-full object-cover'
-          width={1000}
-          height={1000}
-        />
       </div>
     </div>
   )
