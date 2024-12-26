@@ -138,8 +138,8 @@ export function ProductForm({ userId }: { userId: string }) {
                   }}
                   content={{
                     button: ({ ready, isUploading }) => {
-                      if (!ready) return 'Preparando...'
-                      if (isUploading) return 'Enviando...'
+                      if (!ready) return <p className='text-center'>Preparando...</p>
+                      if (isUploading) return <p className='text-center'>Enviando...</p>
                       return (
                         <div className=''>
                           <ImageUp className='h-8 w-8 text-gray-400' />
@@ -148,11 +148,11 @@ export function ProductForm({ userId }: { userId: string }) {
                     },
                     allowedContent: ({ ready, fileTypes, isUploading }) => {
                       if (!ready)
-                        return 'Verificando tipos de archivo permitidos...'
-                      if (isUploading) return 'Enviando archivo...'
+                        return <p className='text-center'>Verificando tipos de archivo permitidos...</p>
+                      if (isUploading) return <p className='text-center'>Enviando archivo...</p>
                       return (
                         <div className='flex flex-col gap-2'>
-                          <p className='pt-3 text-center'>
+                          <p className='text-center'>
                             Puede subir máximo 3 archivos
                           </p>
                         </div>
