@@ -10,8 +10,9 @@ import Insights from '@/components/Insights'
 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import ProductEditor from '@/components/ProductEditor'
-import { Trash } from 'lucide-react'
+
 import ProductDelete from '@/components/ProductDelete'
+import Mapa from '@/components/Mapa'
 
 const page = async () => {
   const { userId } = await auth()
@@ -48,16 +49,10 @@ const page = async () => {
 
   return (
     <div className='flex gap-2 px-4 md:flex-row'>
-      <div className='mx-auto w-full lg:w-3/4 flex  justify-between'>
+      <div className='mx-auto flex w-full justify-between lg:w-3/4'>
         <ProductForm userId={user.id} />
         <div className='grid w-full place-items-center px-4 md:place-items-start'>
-          <Image
-            src='/assets/images/map.png'
-            alt='mapa'
-            className='h-full w-full object-cover'
-            width={1000}
-            height={1000}
-          />
+          <Mapa />
         </div>
       </div>
       <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-1/4'>
