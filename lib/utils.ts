@@ -11,10 +11,11 @@ export interface Product {
   slug: string
   description: string | null
   price: number
-  imageUrl: string | null
+  imageUrl?: string[]
   userId: string
   createdAt: Date
   updatedAt: Date
+  city?: string
 }
 
 export type ProductInput = {
@@ -22,6 +23,7 @@ export type ProductInput = {
   slug: string
   description?: string
   price: number
-  imageUrl: string
+  imageUrl?: string
   userId: string
+  city?: string
 }

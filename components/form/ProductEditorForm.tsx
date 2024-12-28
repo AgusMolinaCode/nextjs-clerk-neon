@@ -44,8 +44,8 @@ const ProductEditorForm = ({
       slug: product.slug ?? '',
       description: product.description ?? '',
       price: product.price ?? 0,
-      imageUrl: JSON.parse(product.imageUrl || '[]'),
-      // city: product.city ?? ''
+      imageUrl: product.imageUrl ?? [],
+      city: product.city ?? ''
     }
   })
 

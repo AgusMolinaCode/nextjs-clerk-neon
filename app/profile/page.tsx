@@ -1,18 +1,14 @@
 import React from 'react'
-import { getProductsByUser, deleteProduct } from '@/lib/products'
+import { getProductsByUser } from '@/lib/products'
 import { getUserById } from '@/lib/users'
 import { auth } from '@clerk/nextjs/server'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ProductForm } from '@/components/form/ProductForm'
-
 import Insights from '@/components/Insights'
-
 import { ScrollArea } from '@/components/ui/scroll-area'
 import ProductEditor from '@/components/ProductEditor'
-
 import ProductDelete from '@/components/ProductDelete'
-import Mapa from '@/components/Mapa'
 
 const page = async () => {
   const { userId } = await auth()
@@ -20,7 +16,7 @@ const page = async () => {
   if (!userId) {
     return (
       <div className='flex min-h-screen items-center justify-center'>
-        <h1 className='text-2xl font-bold'>
+        <h1 className='text-xl font-bold'>
           Error: No se ha encontrado el usuario.
         </h1>
       </div>
@@ -33,19 +29,13 @@ const page = async () => {
     return (
       <div className='flex min-h-screen items-center justify-center'>
         <h1 className='text-2xl font-bold'>
-          Usuario no encontrado,vuelve a iniciar sesión
+          Usuario no encontrado, vuelve a iniciar sesión
         </h1>
       </div>
     )
   }
 
-  const products = await getProductsByUser(user?.id)
-
-  const sanitizedProducts = products.map(product => ({
-    ...product,
-    description: product.description ?? '',
-    imageUrl: Array.isArray(product.imageUrl) ? product.imageUrl[0] : product.imageUrl ?? '/assets/images/no-product.png'
-  }))
+  const products = await getProductsByUser(user.id)
 
   return (
     <div className='flex gap-2 px-4 md:flex-row'>
@@ -56,20 +46,15 @@ const page = async () => {
         <div className='flex w-full items-center justify-between gap-2 md:max-w-[360px]'>
           <h1 className='text-lg font-bold'>Mis Publicaciones</h1>
         </div>
-        {sanitizedProducts.length === 0 ? (
+        {products.length === 0 ? (
           <p>No hay productos disponibles.</p>
         ) : (
           <ScrollArea className='h-[420px] w-full'>
             <ul className='flex h-[420px] w-full flex-col justify-start space-y-2'>
-              {sanitizedProducts.map(product => {
-                let firstImageUrl = '/assets/images/no-product.png'
-                try {
-                  if (Array.isArray(product.imageUrl)) {
-                    firstImageUrl = product.imageUrl[0] || firstImageUrl
-                  }
-                } catch (error) {
-                  console.error('Error parsing imageUrl:', error)
-                }
+              {products.map(product => {
+                const firstImageUrl = Array.isArray(product.imageUrl)
+                  ? product.imageUrl[0]
+                  : '/assets/images/no-product.png'
 
                 return (
                   <div className='flex w-full justify-between gap-2 rounded-md border bg-gray-50 p-2 transition-all duration-300 hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-950 hover:dark:bg-gray-800 md:max-w-[360px]'>
@@ -99,7 +84,7 @@ const page = async () => {
                       </div>
                     </Link>
                     <div className='flex items-center gap-2'>
-                      <ProductEditor product={product} />
+                      <ProductEditor product={{ ...product, city: product.city ?? undefined }} />
                       <ProductDelete productId={product.id} />
                     </div>
                   </div>

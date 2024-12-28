@@ -73,7 +73,7 @@ export async function createProduct(data: ProductInput) {
         price: data.price,
         imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
         userId: data.userId,
-        // city: data.city
+        city: data.city
       }
     })
 
@@ -101,7 +101,7 @@ export async function updateProduct(data: ProductInput) {
         price: data.price,
         imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
         userId: data.userId,
-        // city: data.city
+        city: data.city
       }
     })
 
