@@ -12,7 +12,7 @@ export interface ProductInput {
   price: number
   imageUrl?: string | null
   userId: string
-  city: string
+  city?: string | null
 }
 
 export async function getProducts(
@@ -71,8 +71,9 @@ export async function createProduct(data: ProductInput) {
         slug: slug,
         description: data.description,
         price: data.price,
-        imageUrl: data.imageUrl,
-        userId: data.userId
+        imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
+        userId: data.userId,
+        // city: data.city
       }
     })
 
@@ -98,8 +99,9 @@ export async function updateProduct(data: ProductInput) {
         slug: data.slug,
         description: data.description,
         price: data.price,
-        imageUrl: data.imageUrl,
-        userId: data.userId
+        imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
+        userId: data.userId,
+        // city: data.city
       }
     })
 

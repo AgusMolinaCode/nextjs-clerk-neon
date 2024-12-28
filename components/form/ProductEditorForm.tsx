@@ -27,6 +27,7 @@ import { Textarea } from '../ui/textarea'
 import Image from 'next/image'
 import ButtonSubmit from '../ButtonSubmit'
 import ImageUploadField from '../ImageUploadField'
+import Mapa from '../Mapa'
 
 const ProductEditorForm = ({
   product,
@@ -43,7 +44,8 @@ const ProductEditorForm = ({
       slug: product.slug ?? '',
       description: product.description ?? '',
       price: product.price ?? 0,
-      imageUrl: JSON.parse(product.imageUrl || '[]')
+      imageUrl: JSON.parse(product.imageUrl || '[]'),
+      // city: product.city ?? ''
     }
   })
 
@@ -54,6 +56,10 @@ const ProductEditorForm = ({
 
   form.setValue('slug', generateSlug(title ?? ''))
 
+  const handleCityChange = (city: string) => {
+    form.setValue('city', city)
+  }
+
   const processForm = async (values: z.infer<typeof UpdateFormSchema>) => {
     const productData: ProductInput = {
       id: product.id,
@@ -62,7 +68,8 @@ const ProductEditorForm = ({
       description: values.description ?? '',
       price: values.price ?? 0,
       imageUrl: JSON.stringify(values.imageUrl ?? []),
-      userId: product.userId
+      userId: product.userId,
+      city: values.city ?? ''
     }
 
     try {
@@ -141,6 +148,17 @@ const ProductEditorForm = ({
             )}
           />
           <ImageUploadField control={form.control} name='imageUrl' />
+          <FormField
+            control={form.control}
+            name='city'
+            render={() => (
+              <FormItem className='w-full'>
+                <FormLabel>Ubicación</FormLabel>
+                <Mapa onCityChange={handleCityChange} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <ButtonSubmit>Modificar publicación</ButtonSubmit>
         </form>

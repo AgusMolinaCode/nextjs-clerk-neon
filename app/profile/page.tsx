@@ -44,7 +44,7 @@ const page = async () => {
   const sanitizedProducts = products.map(product => ({
     ...product,
     description: product.description ?? '',
-    imageUrl: product.imageUrl ?? '/assets/images/no-product.png'
+    imageUrl: Array.isArray(product.imageUrl) ? product.imageUrl[0] : product.imageUrl ?? '/assets/images/no-product.png'
   }))
 
   return (
@@ -64,9 +64,8 @@ const page = async () => {
               {sanitizedProducts.map(product => {
                 let firstImageUrl = '/assets/images/no-product.png'
                 try {
-                  if (product.imageUrl) {
-                    const imageUrls = JSON.parse(product.imageUrl)
-                    firstImageUrl = imageUrls[0] || firstImageUrl
+                  if (Array.isArray(product.imageUrl)) {
+                    firstImageUrl = product.imageUrl[0] || firstImageUrl
                   }
                 } catch (error) {
                   console.error('Error parsing imageUrl:', error)
