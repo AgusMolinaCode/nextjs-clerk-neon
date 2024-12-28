@@ -51,9 +51,6 @@ const page = async () => {
     <div className='flex gap-2 px-4 md:flex-row'>
       <div className='mx-auto flex w-full justify-between lg:w-3/4'>
         <ProductForm userId={user.id} />
-        <div className='grid w-full place-items-center px-4 md:place-items-start'>
-          <Mapa />
-        </div>
       </div>
       <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-1/4'>
         <div className='flex w-full items-center justify-between gap-2 md:max-w-[360px]'>

@@ -12,6 +12,7 @@ export interface ProductInput {
   price: number
   imageUrl?: string | null
   userId: string
+  city: string
 }
 
 export async function getProducts(

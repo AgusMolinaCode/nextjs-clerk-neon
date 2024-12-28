@@ -3,24 +3,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from '@/components/ui/form'
+import { Form, FormField } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { CreateFormSchema } from '@/lib/validation'
 import { generateSlug } from '@/constants'
 import { createProduct, ProductInput } from '@/lib/products'
-import { UploadButton } from '@/utils/uploadthing'
-import { ImageUp } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
 import ButtonSubmit from '../ButtonSubmit'
 import { useToast } from '@/hooks/use-toast'
-import Image from 'next/image'
+import ImageUploadField from '../ImageUploadField'
+import { FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
+import Mapa from '../Mapa'
 
 export function ProductForm({ userId }: { userId: string }) {
   const { toast } = useToast()
@@ -31,7 +24,8 @@ export function ProductForm({ userId }: { userId: string }) {
       slug: '',
       description: '',
       price: undefined,
-      imageUrl: [] as string[]
+      imageUrl: [] as string[],
+      city: ''
     }
   })
 
@@ -42,6 +36,10 @@ export function ProductForm({ userId }: { userId: string }) {
 
   form.setValue('slug', generateSlug(title))
 
+  const handleCityChange = (city: string) => {
+    form.setValue('city', city)
+  }
+
   const processForm = async (values: z.infer<typeof CreateFormSchema>) => {
     const productData: ProductInput = {
       title: values.title,
@@ -49,8 +47,10 @@ export function ProductForm({ userId }: { userId: string }) {
       description: values.description,
       price: values.price,
       imageUrl: JSON.stringify(values.imageUrl),
-      userId: userId
+      userId: userId,
+      city: values.city
     }
+    console.log(productData)
 
     try {
       const { product, error } = await createProduct(productData)
@@ -77,28 +77,50 @@ export function ProductForm({ userId }: { userId: string }) {
           onSubmit={form.handleSubmit(processForm)}
           className='flex h-full w-full flex-col justify-between space-y-2 rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950'
         >
-          <div className='h-full'>
-            <FormField
-              control={form.control}
-              name='title'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Título</FormLabel>
-                  <FormControl>
-                    <Input placeholder='Título del producto' {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <div className='flex w-full justify-between gap-2'>
+            <div className='flex w-full flex-col gap-4'>
+              <FormField
+                control={form.control}
+                name='title'
+                render={({ field }) => (
+                  <FormItem className='w-full'>
+                    <FormLabel>Título</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Título del producto' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='price'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Precio</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        placeholder='0.00'
+                        {...field}
+                        className='appearance-none'
+                        style={{ MozAppearance: 'textfield' }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             <FormField
               control={form.control}
               name='description'
               render={({ field }) => (
-                <FormItem>
+                <FormItem className='w-full'>
                   <FormLabel>Descripción</FormLabel>
                   <FormControl>
                     <Textarea
+                      rows={5}
                       placeholder='Descripción del producto'
                       {...field}
                     />
@@ -107,113 +129,17 @@ export function ProductForm({ userId }: { userId: string }) {
                 </FormItem>
               )}
             />
+          </div>
+          <div className='flex w-full justify-between gap-2'>
+            <ImageUploadField control={form.control} name='imageUrl' />
             <FormField
               control={form.control}
-              name='price'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Precio</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      placeholder='0.00'
-                      {...field}
-                      className='appearance-none'
-                      style={{ MozAppearance: 'textfield' }}
-                    />
-                  </FormControl>
+              name='city'
+              render={() => (
+                <FormItem className='w-full'>
+                  <FormLabel>Ubicación</FormLabel>
+                  <Mapa onCityChange={handleCityChange} />
                   <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='imageUrl'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Imágenes</FormLabel>
-                  <FormControl>
-                    <UploadButton
-                      appearance={{
-                        button:
-                          'w-full bg-transparent border border-dashed dark:border-gray-500 rounded-md p-2 h-20',
-                        container: 'w-full',
-                        allowedContent: 'w-full'
-                      }}
-                      content={{
-                        button: ({ ready, isUploading }) => {
-                          if (!ready)
-                            return <p className='text-center'>Preparando...</p>
-                          if (isUploading)
-                            return <p className='text-center'>Enviando...</p>
-                          return (
-                            <div className=''>
-                              <ImageUp className='h-8 w-8 text-gray-400' />
-                            </div>
-                          )
-                        },
-                        allowedContent: ({ ready, fileTypes, isUploading }) => {
-                          if (!ready)
-                            return (
-                              <p className='text-center'>
-                                Verificando tipos de archivo permitidos...
-                              </p>
-                            )
-                          if (isUploading)
-                            return (
-                              <p className='text-center'>Enviando archivo...</p>
-                            )
-                          return (
-                            <div className='flex flex-col gap-2'>
-                              <p className='text-center'>
-                                Puede subir máximo 3 archivos
-                              </p>
-                            </div>
-                          )
-                        }
-                      }}
-                      endpoint='imageUploader'
-                      onClientUploadComplete={res => {
-                        if (res && res.length > 0) {
-                          const imageUrls = res.map(file => file.url)
-                          form.setValue('imageUrl', imageUrls)
-                          toast({
-                            duration: 3000,
-                            title: 'Imágenes subidas con éxito',
-                            description:
-                              'Las imágenes han sido subidas correctamente, puedes continuar con el siguiente paso',
-                            variant: 'default'
-                          })
-                        }
-                      }}
-                      onUploadError={(error: Error) => {
-                        console.log(error)
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                  <div className='mx-auto grid w-full grid-cols-3 place-items-center items-center justify-center gap-2 pt-2'>
-                    {field.value.map((url: string, index: number) => (
-                      <Image
-                        key={index}
-                        src={url}
-                        alt={`Imagen ${index + 1}`}
-                        width={120}
-                        height={120}
-                        className='h-20 w-20 rounded-md object-cover'
-                      />
-                    ))}
-                    {[...Array(3 - field.value.length)].map((_, index) => (
-                      <div
-                        key={`placeholder-${index}`}
-                        className='relative flex h-20 w-20 items-center justify-center rounded-md border border-dashed border-gray-500 bg-gray-100 dark:bg-gray-900'
-                      >
-                        <span className='text-xl text-gray-500'>
-                          {field.value.length + index + 1}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
                 </FormItem>
               )}
             />
