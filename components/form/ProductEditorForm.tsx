@@ -26,6 +26,8 @@ import { ImageUp } from 'lucide-react'
 import { Textarea } from '../ui/textarea'
 import Image from 'next/image'
 import ButtonSubmit from '../ButtonSubmit'
+import ImageUploadField from '../ImageUploadField'
+import Mapa from '../Mapa'
 
 const ProductEditorForm = ({
   product,
@@ -42,7 +44,8 @@ const ProductEditorForm = ({
       slug: product.slug ?? '',
       description: product.description ?? '',
       price: product.price ?? 0,
-      imageUrl: JSON.parse(product.imageUrl || '[]')
+      imageUrl: JSON.parse(product.imageUrl || '[]'),
+      // city: product.city ?? ''
     }
   })
 
@@ -53,6 +56,10 @@ const ProductEditorForm = ({
 
   form.setValue('slug', generateSlug(title ?? ''))
 
+  const handleCityChange = (city: string) => {
+    form.setValue('city', city)
+  }
+
   const processForm = async (values: z.infer<typeof UpdateFormSchema>) => {
     const productData: ProductInput = {
       id: product.id,
@@ -61,7 +68,8 @@ const ProductEditorForm = ({
       description: values.description ?? '',
       price: values.price ?? 0,
       imageUrl: JSON.stringify(values.imageUrl ?? []),
-      userId: product.userId
+      userId: product.userId,
+      city: values.city ?? ''
     }
 
     try {
@@ -139,75 +147,15 @@ const ProductEditorForm = ({
               </FormItem>
             )}
           />
+          <ImageUploadField control={form.control} name='imageUrl' />
           <FormField
             control={form.control}
-            name='imageUrl'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Imágenes</FormLabel>
-                <FormControl>
-                  <UploadButton
-                    appearance={{
-                      button:
-                        'w-full bg-transparent border border-dashed dark:border-gray-500 rounded-md p-2 h-20',
-                      container: 'w-full',
-                      allowedContent: 'w-full'
-                    }}
-                    content={{
-                      button: ({ ready, isUploading }) => {
-                        if (!ready) return 'Preparando...'
-                        if (isUploading) return 'Enviando...'
-                        return (
-                          <div className=''>
-                            <ImageUp className='h-8 w-8 text-gray-400' />
-                          </div>
-                        )
-                      },
-                      allowedContent: ({ ready, fileTypes, isUploading }) => {
-                        if (!ready)
-                          return 'Verificando tipos de archivo permitidos...'
-                        if (isUploading) return 'Enviando archivo...'
-                        return (
-                          <div className='flex flex-col gap-2'>
-                            <p className='pt-3 text-center'>
-                              Puede subir máximo 3 archivos
-                            </p>
-                          </div>
-                        )
-                      }
-                    }}
-                    endpoint='imageUploader'
-                    onClientUploadComplete={res => {
-                      if (res && res.length > 0) {
-                        const imageUrls = res.map(file => file.url)
-                        form.setValue('imageUrl', imageUrls)
-                        toast({
-                          duration: 3000,
-                          title: 'Imágenes subidas con éxito',
-                          description:
-                            'Las imágenes han sido subidas correctamente, puedes continuar con el siguiente paso',
-                          variant: 'default'
-                        })
-                      }
-                    }}
-                    onUploadError={(error: Error) => {
-                      console.log(error)
-                    }}
-                  />
-                </FormControl>
+            name='city'
+            render={() => (
+              <FormItem className='w-full'>
+                <FormLabel>Ubicación</FormLabel>
+                <Mapa onCityChange={handleCityChange} />
                 <FormMessage />
-                <div className='mx-auto grid w-full grid-cols-3 place-items-center items-center justify-center gap-2 pt-2'>
-                  {(field.value ?? []).map((url: string, index: number) => (
-                    <Image
-                      key={index}
-                      src={url}
-                      alt={`Imagen ${index + 1}`}
-                      width={120}
-                      height={120}
-                      className='h-20 w-20 rounded-md object-cover'
-                    />
-                  ))}
-                </div>
               </FormItem>
             )}
           />

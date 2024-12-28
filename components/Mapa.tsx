@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import mapboxgl from 'mapbox-gl'
 
-const Mapa = () => {
+const Mapa = ({ onCityChange }: { onCityChange: (city: string) => void }) => {
   const [coords, setCoords] = useState({ lng: -58.3816, lat: -34.6037 })
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Mapa = () => {
         .then(response => response.json())
         .then(data => {
           const placeName = data.features[0]?.place_name || 'Unknown location'
-          console.log(`City: ${placeName}`)
+          onCityChange(placeName)
         })
         .catch(error => console.error('Error fetching location data:', error))
     })
