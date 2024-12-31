@@ -2,20 +2,34 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, useWatch } from 'react-hook-form'
+import { useEffect } from 'react'
 import { z } from 'zod'
-import { Form, FormField } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { CreateFormSchema } from '@/lib/validation'
-import { generateSlug } from '@/constants'
-import { createProduct, ProductInput } from '@/lib/products'
-import { Textarea } from '../ui/textarea'
-import ButtonSubmit from '../ButtonSubmit'
+import { Form } from '@/components/ui/form'
+import { CreateFormSchema, UpdateFormSchema } from '@/lib/validation'
+import { createProduct, updateProduct, ProductInput } from '@/lib/products'
 import { useToast } from '@/hooks/use-toast'
-import ImageUploadField from '../ImageUploadField'
-import { FormItem, FormLabel, FormControl, FormMessage } from '../ui/form'
-import Mapa from '../Mapa'
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import ImageUploadField from '@/components/ImageUploadField'
+import Mapa from '@/components/Mapa'
+import { Product } from '@/lib/utils'
+import ButtonSubmit from '../ButtonSubmit'
+import { revalidatePath } from 'next/cache'
+import { generateSlug } from '@/constants'
 
-export function ProductForm({ userId }: { userId: string }) {
+interface ProductFormProps {
+  userId: string
+  product?: ProductInput
+}
+
+export function ProductForm({ userId, product }: ProductFormProps) {
   const { toast } = useToast()
   const form = useForm<z.infer<typeof CreateFormSchema>>({
     resolver: zodResolver(CreateFormSchema),
@@ -36,11 +50,25 @@ export function ProductForm({ userId }: { userId: string }) {
 
   form.setValue('slug', generateSlug(title))
 
+  // Update form values when product changes
+  useEffect(() => {
+    if (product) {
+      form.reset({
+        title: product.title,
+        slug: product.slug,
+        description: product.description ?? undefined,
+        price: product.price,
+        imageUrl: product.imageUrl ? JSON.parse(product.imageUrl) : [],
+        city: product.city ?? undefined
+      })
+    }
+  }, [product, form])
+
   const handleCityChange = (city: string) => {
     form.setValue('city', city)
   }
 
-  const processForm = async (values: z.infer<typeof CreateFormSchema>) => {
+  const createSubmit = async (values: z.infer<typeof CreateFormSchema>) => {
     const productData: ProductInput = {
       title: values.title,
       slug: generateSlug(values.title),
@@ -50,7 +78,6 @@ export function ProductForm({ userId }: { userId: string }) {
       userId: userId,
       city: values.city
     }
-    console.log(productData)
 
     try {
       const { product, error } = await createProduct(productData)
@@ -70,11 +97,45 @@ export function ProductForm({ userId }: { userId: string }) {
     }
   }
 
+  const updateSubmit = async (values: z.infer<typeof UpdateFormSchema>) => {
+
+    
+    const productData: ProductInput = {
+      id: product?.id ?? '',
+      title: values.title ?? '',
+      slug: generateSlug(values.title ?? ''),
+      description: values.description ?? '',
+      price: values.price ?? 0,
+      imageUrl: JSON.stringify(values.imageUrl ?? []),
+      userId: userId,
+      city: values.city ?? ''
+    }
+
+    try {
+      const { product, error } = await updateProduct(productData)
+      if (error) {
+        console.error('Error al actualizar el producto:', error)
+      } else {
+        toast({
+          duration: 3000,
+          title: 'Producto actualizado con éxito',
+          description: 'El producto ha sido actualizado correctamente',
+          variant: 'default'
+        })
+        form.reset()
+      }
+    } catch (error) {
+      console.error('Error al actualizar el producto:', error)
+    }
+  }
+
+  const handleSubmit = product ? updateSubmit : createSubmit
+
   return (
     <div className='flex h-full w-full flex-col justify-between'>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(processForm)}
+          onSubmit={form.handleSubmit(handleSubmit)}
           className='flex h-full w-full flex-col justify-between space-y-2 rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950'
         >
           <div className='flex w-full justify-between gap-2'>
@@ -95,7 +156,7 @@ export function ProductForm({ userId }: { userId: string }) {
               <FormField
                 control={form.control}
                 name='price'
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                   <FormItem>
                     <FormLabel>Precio</FormLabel>
                     <FormControl>
@@ -107,7 +168,7 @@ export function ProductForm({ userId }: { userId: string }) {
                         style={{ MozAppearance: 'textfield' }}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{fieldState.error?.message}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -138,13 +199,19 @@ export function ProductForm({ userId }: { userId: string }) {
               render={() => (
                 <FormItem className='w-full'>
                   <FormLabel>Ubicación</FormLabel>
-                  <Mapa onCityChange={handleCityChange} />
+                  <Mapa
+                    onCityChange={handleCityChange}
+                    initialCity={product?.city}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-          <ButtonSubmit>Crear publicación</ButtonSubmit>
+
+          <ButtonSubmit>
+            {product ? 'Editar Publicación' : 'Crear Publicación'}
+          </ButtonSubmit>
         </form>
       </Form>
     </div>

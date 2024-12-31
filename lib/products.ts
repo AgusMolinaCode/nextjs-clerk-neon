@@ -86,31 +86,28 @@ export async function createProduct(data: ProductInput) {
   }
 }
 
-export async function updateProduct(data: ProductInput) {
-  if (!data.id) {
+export async function updateProduct(productData: ProductInput) {
+  if (!productData.id) {
     throw new Error('El id del producto es necesario para actualizarlo.')
   }
 
   try {
-    const product = await prisma.product.update({
-      where: { id: data.id },
+    const updatedProduct = await prisma.product.update({
+      where: { id: productData.id },
       data: {
-        title: data.title,
-        slug: data.slug,
-        description: data.description,
-        price: data.price,
-        imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
-        userId: data.userId,
-        city: data.city
+        title: productData.title,
+        slug: productData.slug,
+        description: productData.description,
+        price: productData.price,
+        imageUrl: productData.imageUrl ? JSON.parse(productData.imageUrl) : [],
+        userId: productData.userId,
+        city: productData.city
       }
     })
-
     revalidatePath('/profile')
-
-    return { product: JSON.parse(JSON.stringify(product)), error: null }
+    return { product: updatedProduct, error: null }
   } catch (error) {
-    console.error('Error al actualizar el producto:', error)
-    return { product: null, error: JSON.parse(JSON.stringify(error)) }
+    return { product: null, error }
   }
 }
 
