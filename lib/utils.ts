@@ -9,13 +9,13 @@ export interface Product {
   id: string
   title: string
   slug: string
-  description: string | null
+  description?: string | null
   price: number
   imageUrl?: string[]
+  city?: string
   userId: string
   createdAt: Date
   updatedAt: Date
-  city?: string
 }
 
 export type ProductInput = {

@@ -91,10 +91,10 @@ export function ProductForm({ userId, product }: ProductFormProps) {
           variant: 'default'
         })
       }
-      form.reset()
     } catch (error) {
       console.error('Error al crear el producto:', error)
     }
+    form.reset()
   }
 
   const updateSubmit = async (values: z.infer<typeof UpdateFormSchema>) => {
@@ -122,11 +122,11 @@ export function ProductForm({ userId, product }: ProductFormProps) {
           description: 'El producto ha sido actualizado correctamente',
           variant: 'default'
         })
-        form.reset()
       }
     } catch (error) {
       console.error('Error al actualizar el producto:', error)
     }
+    form.reset()
   }
 
   const handleSubmit = product ? updateSubmit : createSubmit
