@@ -8,6 +8,7 @@ import Image from 'next/image'
 import ProductDelete from './ProductDelete'
 import Insights from './Insights'
 import { Product } from '@/lib/utils'
+import { EditIcon } from 'lucide-react'
 
 const ProductList = ({
   products,
@@ -80,9 +81,9 @@ const ProductList = ({
                       <div className='flex items-center gap-2'>
                         <button
                           onClick={() => setSelectedProduct(product)}
-                          className='text-blue-500 hover:underline'
+                          className='text-blue-500'
                         >
-                          Editar
+                          <EditIcon className='h-4 w-4 mb-1' />
                         </button>
                         <ProductDelete productId={product.id} />
                       </div>
