@@ -2,7 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, useWatch } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { Form } from '@/components/ui/form'
 import { CreateFormSchema, UpdateFormSchema } from '@/lib/validation'
@@ -19,17 +19,20 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import ImageUploadField from '@/components/ImageUploadField'
 import Mapa from '@/components/Mapa'
-import { Product } from '@/lib/utils'
 import ButtonSubmit from '../ButtonSubmit'
 import { generateSlug } from '@/constants'
+import { ArrowBigLeft, ArrowLeft } from 'lucide-react'
 
 interface ProductFormProps {
   userId: string
   product?: ProductInput
+  onSuccess?: () => void
+  onCancelEdit?: () => void
 }
 
-export function ProductForm({ userId, product }: ProductFormProps) {
+export function ProductForm({ userId, product, onSuccess, onCancelEdit }: ProductFormProps) {
   const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof CreateFormSchema>>({
     resolver: zodResolver(CreateFormSchema),
     defaultValues: {
@@ -67,11 +70,12 @@ export function ProductForm({ userId, product }: ProductFormProps) {
   }
 
   const createSubmit = async (values: z.infer<typeof CreateFormSchema>) => {
+    setIsLoading(true)
     const productData: ProductInput = {
       title: values.title,
       slug: generateSlug(values.title),
       description: values.description,
-      price: values.price,
+      price: values.price ?? 0,
       imageUrl: JSON.stringify(values.imageUrl),
       userId: userId,
       city: values.city
@@ -88,14 +92,25 @@ export function ProductForm({ userId, product }: ProductFormProps) {
           description: 'El producto ha sido creado correctamente',
           variant: 'default'
         })
-        form.reset()
+        form.reset({
+          title: '',
+          slug: '',
+          description: '',
+          price: 0,
+          imageUrl: [],
+          city: ''
+        })
+        onSuccess?.()
       }
     } catch (error) {
       console.error('Error al crear el producto:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const updateSubmit = async (values: z.infer<typeof UpdateFormSchema>) => {
+    setIsLoading(true)
     const productData: ProductInput = {
       id: product?.id ?? '',
       title: values.title ?? '',
@@ -118,24 +133,54 @@ export function ProductForm({ userId, product }: ProductFormProps) {
           description: 'El producto ha sido actualizado correctamente',
           variant: 'default'
         })
-        form.reset()
+        form.reset({
+          title: '',
+          slug: '',
+          description: '',
+          price: 0,
+          imageUrl: [],
+          city: ''
+        })
+        onSuccess?.()
       }
     } catch (error) {
       console.error('Error al actualizar el producto:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const handleSubmit = product ? updateSubmit : createSubmit
 
   return (
-    <div className='flex h-full w-full flex-col justify-between'>
+    <div className='flex w-full flex-col justify-between'>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className='flex h-full w-full flex-col justify-between space-y-2 rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950'
+          className='flex gap-2 w-full flex-col justify-between rounded-md border bg-gray-50 dark:border-gray-800 dark:bg-gray-950 p-2'
         >
-          <div className='flex w-full justify-between gap-2'>
-            <div className='flex w-full flex-col gap-4'>
+          {product && (
+              <button
+                type='button'
+                onClick={() => {
+                  form.reset({
+                    title: '',
+                    slug: '',
+                    description: '',
+                    price: 0,
+                    imageUrl: [],
+                    city: ''
+                  })
+                  onCancelEdit?.()
+                }}
+                className='flex items-center gap-1 text-xs text-blue-500'
+              >
+                <ArrowLeft className='w-4 h-4' />
+                Cancelar Edición
+              </button>
+            )}
+          <div className='flex w-full justify-between gap-1'>
+            <div className='flex w-full flex-col gap-2'>
               <FormField
                 control={form.control}
                 name='title'
@@ -205,9 +250,12 @@ export function ProductForm({ userId, product }: ProductFormProps) {
             />
           </div>
 
-          <ButtonSubmit>
-            {product ? 'Editar Publicación' : 'Crear Publicación'}
-          </ButtonSubmit>
+      
+            <ButtonSubmit disabled={isLoading}>
+              {isLoading ? (product ? 'Editando...' : 'Creando...') : (product ? 'Editar Publicación' : 'Crear Publicación')}
+            </ButtonSubmit>
+            
+   
         </form>
       </Form>
     </div>

@@ -19,6 +19,14 @@ const ProductList = ({
 }) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(undefined)
 
+  const handleSuccess = () => {
+    setSelectedProduct(undefined) // Restablecer el producto seleccionado
+  }
+
+  const handleCancelEdit = () => {
+    setSelectedProduct(undefined) // Restablecer el producto seleccionado al cancelar
+  }
+
   return (
     <div>
       <div className='flex gap-2 px-4 md:flex-row'>
@@ -33,6 +41,8 @@ const ProductList = ({
                   }
                 : undefined
             }
+            onSuccess={handleSuccess}
+            onCancelEdit={handleCancelEdit} // Pasar el callback de cancelación
           />
         </div>
         <div className='grid w-full place-items-center px-4 md:place-items-start lg:w-1/4'>
