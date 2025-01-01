@@ -21,7 +21,6 @@ import ImageUploadField from '@/components/ImageUploadField'
 import Mapa from '@/components/Mapa'
 import { Product } from '@/lib/utils'
 import ButtonSubmit from '../ButtonSubmit'
-import { revalidatePath } from 'next/cache'
 import { generateSlug } from '@/constants'
 
 interface ProductFormProps {
@@ -50,7 +49,6 @@ export function ProductForm({ userId, product }: ProductFormProps) {
 
   form.setValue('slug', generateSlug(title))
 
-  // Update form values when product changes
   useEffect(() => {
     if (product) {
       form.reset({
@@ -90,16 +88,14 @@ export function ProductForm({ userId, product }: ProductFormProps) {
           description: 'El producto ha sido creado correctamente',
           variant: 'default'
         })
+        form.reset()
       }
     } catch (error) {
       console.error('Error al crear el producto:', error)
     }
-    form.reset()
   }
 
   const updateSubmit = async (values: z.infer<typeof UpdateFormSchema>) => {
-
-    
     const productData: ProductInput = {
       id: product?.id ?? '',
       title: values.title ?? '',
@@ -122,11 +118,11 @@ export function ProductForm({ userId, product }: ProductFormProps) {
           description: 'El producto ha sido actualizado correctamente',
           variant: 'default'
         })
+        form.reset()
       }
     } catch (error) {
       console.error('Error al actualizar el producto:', error)
     }
-    form.reset()
   }
 
   const handleSubmit = product ? updateSubmit : createSubmit

@@ -17,10 +17,10 @@ const Mapa: React.FC<MapaProps> = ({ onCityChange, initialCity }) => {
   useEffect(() => {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || ''
     const map = new mapboxgl.Map({
-      container: 'map', // container ID
-      style: 'mapbox://styles/mapbox/streets-v12', // style URL
-      center: [coords.lng, coords.lat], // Buenos Aires coordinates
-      zoom: 12 // starting zoom
+      container: 'map', 
+      style: 'mapbox://styles/mapbox/streets-v12', 
+      center: [coords.lng, coords.lat], 
+      zoom: 8 
     })
 
     const marker = new mapboxgl.Marker({ draggable: true })
