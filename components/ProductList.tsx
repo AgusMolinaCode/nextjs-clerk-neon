@@ -29,8 +29,8 @@ const ProductList = ({
 
   return (
     <div>
-      <div className='flex gap-2 px-4 md:flex-row'>
-        <div className='mx-auto flex w-full justify-between lg:w-3/4'>
+      <div className='flex flex-col gap-2 px-4'>
+        <div className='mx-auto flex w-full justify-between lg:max-w-7xl'>
           <ProductForm
             userId={userId}
             product={
