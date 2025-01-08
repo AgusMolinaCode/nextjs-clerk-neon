@@ -22,6 +22,7 @@ import Mapa from '@/components/Mapa'
 import ButtonSubmit from '../ButtonSubmit'
 import { generateSlug } from '@/constants'
 import { ArrowBigLeft, ArrowLeft } from 'lucide-react'
+import TagsInput from '../TagsInput'
 
 interface ProductFormProps {
   userId: string
@@ -30,7 +31,12 @@ interface ProductFormProps {
   onCancelEdit?: () => void
 }
 
-export function ProductForm({ userId, product, onSuccess, onCancelEdit }: ProductFormProps) {
+export function ProductForm({
+  userId,
+  product,
+  onSuccess,
+  onCancelEdit
+}: ProductFormProps) {
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const form = useForm<z.infer<typeof CreateFormSchema>>({
@@ -153,34 +159,34 @@ export function ProductForm({ userId, product, onSuccess, onCancelEdit }: Produc
   const handleSubmit = product ? updateSubmit : createSubmit
 
   return (
-    <div className='flex w-full flex-col justify-between'>
+    <div className='flex h-full w-full flex-col justify-between'>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className='flex gap-2 w-full flex-col justify-between rounded-md border bg-gray-50 dark:border-gray-800 dark:bg-gray-950 p-2'
+          className='flex h-full w-full flex-col justify-between gap-2 rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950'
         >
           {product && (
-              <button
-                type='button'
-                onClick={() => {
-                  form.reset({
-                    title: '',
-                    slug: '',
-                    description: '',
-                    price: 0,
-                    imageUrl: [],
-                    city: ''
-                  })
-                  onCancelEdit?.()
-                }}
-                className='flex items-center gap-1 text-xs text-blue-500'
-              >
-                <ArrowLeft className='w-4 h-4' />
-                Cancelar Edición
-              </button>
-            )}
-          <div className='flex w-full justify-between gap-1'>
-            <div className='flex w-full flex-col gap-2'>
+            <button
+              type='button'
+              onClick={() => {
+                form.reset({
+                  title: '',
+                  slug: '',
+                  description: '',
+                  price: 0,
+                  imageUrl: [],
+                  city: ''
+                })
+                onCancelEdit?.()
+              }}
+              className='flex items-center gap-1 text-xs text-blue-500'
+            >
+              <ArrowLeft className='h-4 w-4' />
+              Cancelar Edición
+            </button>
+          )}
+          <div className='flex w-full flex-col justify-between gap-2 sm:flex-row md:gap-8'>
+            <div className='flex w-full flex-col justify-center space-y-3'>
               <FormField
                 control={form.control}
                 name='title'
@@ -232,30 +238,47 @@ export function ProductForm({ userId, product, onSuccess, onCancelEdit }: Produc
               )}
             />
           </div>
-          <div className='flex w-full justify-between gap-2'>
+          <div>
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <TagsInput control={form.control} name="tags" />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className='flex min-h-[250px] w-full flex-col justify-between gap-2 sm:flex-row md:gap-8'>
             <ImageUploadField control={form.control} name='imageUrl' />
             <FormField
               control={form.control}
               name='city'
               render={() => (
-                <FormItem className='w-full'>
+                <FormItem className='h-full w-full'>
                   <FormLabel>Ubicación</FormLabel>
-                  <Mapa
-                    onCityChange={handleCityChange}
-                    initialCity={product?.city}
-                  />
+                  <div className='h-[calc(100%-2rem)]'>
+                    <Mapa
+                      onCityChange={handleCityChange}
+                      initialCity={product?.city}
+                    />
+                  </div>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
 
-      
-            <ButtonSubmit disabled={isLoading}>
-              {isLoading ? (product ? 'Editando...' : 'Creando...') : (product ? 'Editar Publicación' : 'Crear Publicación')}
-            </ButtonSubmit>
-            
-   
+          <ButtonSubmit disabled={isLoading}>
+            {isLoading
+              ? product
+                ? 'Editando...'
+                : 'Creando...'
+              : product
+                ? 'Editar Publicación'
+                : 'Crear Publicación'}
+          </ButtonSubmit>
         </form>
       </Form>
     </div>

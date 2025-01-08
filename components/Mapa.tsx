@@ -67,16 +67,16 @@ const Mapa: React.FC<MapaProps> = ({ onCityChange, initialCity }) => {
   }, [initialCity])
 
   return (
-    <>
+    <div className='flex flex-col h-full gap-2'>
       <div
-        className='rounded-md'
+        className='rounded-md flex-1 min-h-[200px]'
         id='map'
-        style={{ width: '100%', height: '80%' }}
+        style={{ width: '100%' }}
       />
       <p className='text-center text-sm text-gray-600 dark:text-gray-400'>
         {cityName}
       </p>
-    </>
+    </div>
   )
 }
 

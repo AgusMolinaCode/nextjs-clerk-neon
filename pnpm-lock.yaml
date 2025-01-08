@@ -74,6 +74,9 @@ importers:
       react-hook-form:
         specifier: ^7.54.1
         version: 7.54.1(react@18.3.1)
+      react-tag-autocomplete:
+        specifier: ^7.4.0
+        version: 7.4.0(react@18.3.1)
       sonner:
         specifier: ^1.5.0
         version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2061,6 +2064,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-tag-autocomplete@7.4.0:
+    resolution: {integrity: sha512-enQSMyZnxG8Nz0EdUtP2kttyO8HELyAU0GKcSeBtLmZvo93/AZJJJyCOyEMPW5E58jEShyvOeDBkFtUC6AdC1w==}
+    engines: {node: '>= 16.12.0'}
+    peerDependencies:
+      react: ^18.0.0
 
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
@@ -4505,6 +4514,10 @@ snapshots:
       tslib: 2.7.0
     optionalDependencies:
       '@types/react': 18.3.7
+
+  react-tag-autocomplete@7.4.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react@18.3.1:
     dependencies:
