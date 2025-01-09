@@ -12,10 +12,8 @@ export const CreateFormSchema = z.object({
     .min(1, { message: 'Debes subir al menos una imagen.' })
     .max(3, { message: 'Puedes subir un máximo de 3 imágenes.' }),
   city: z.string().min(1, { message: 'La ciudad es obligatoria.' }),
-  tags: z.array(z.object({
-    value: z.number(),
-    label: z.string()
-  })).optional()
+  tags: z.array(z.string()).default([]),
+  category: z.string().min(1, { message: 'La categoría es obligatoria.' })
 })
 
 export const UpdateFormSchema = CreateFormSchema.partial()

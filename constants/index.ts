@@ -11,6 +11,71 @@ export const Categories = [
     { id: 10, name: 'Libros y Literatura', icons: '/assets/icons/books_literature.svg' },
 ]
 
+export const ServiceCategories = [
+  {
+    label: 'Transporte',
+    color: 'bg-blue-100 dark:bg-blue-950',
+    items: [
+      { value: 'flete', label: 'Fletes y Mudanzas' },
+      { value: 'transporte-personal', label: 'Transporte Personal' },
+      { value: 'delivery', label: 'Delivery y Mensajería' }
+    ]
+  },
+  {
+    label: 'Construcción',
+    color: 'bg-orange-100 dark:bg-orange-950',
+    items: [
+      { value: 'albanil', label: 'Albañil' },
+      { value: 'pintor', label: 'Pintor' },
+      { value: 'carpintero', label: 'Carpintero' }
+    ]
+  },
+  {
+    label: 'Instalaciones',
+    color: 'bg-yellow-100 dark:bg-yellow-950',
+    items: [
+      { value: 'plomero', label: 'Plomero' },
+      { value: 'gasista', label: 'Gasista' },
+      { value: 'electricista', label: 'Electricista' }
+    ]
+  },
+  {
+    label: 'Tecnología',
+    color: 'bg-purple-100 dark:bg-purple-950',
+    items: [
+      { value: 'computacion', label: 'Reparación PC/Notebook' },
+      { value: 'redes', label: 'Redes/WiFi' },
+      { value: 'programacion', label: 'Programación/Web' }
+    ]
+  },
+  {
+    label: 'Hogar',
+    color: 'bg-green-100 dark:bg-green-950',
+    items: [
+      { value: 'limpieza', label: 'Limpieza' },
+      { value: 'jardineria', label: 'Jardinería' },
+      { value: 'decoracion', label: 'Decoración' }
+    ]
+  },
+  {
+    label: 'Profesionales',
+    color: 'bg-indigo-100 dark:bg-indigo-950',
+    items: [
+      { value: 'contador', label: 'Contador' },
+      { value: 'abogado', label: 'Abogado' },
+      { value: 'arquitecto', label: 'Arquitecto' }
+    ]
+  },
+  {
+    label: 'Educación',
+    color: 'bg-pink-100 dark:bg-pink-950',
+    items: [
+      { value: 'profesor', label: 'Profesor Particular' },
+      { value: 'idiomas', label: 'Profesor de Idiomas' },
+      { value: 'musica', label: 'Profesor de Música' }
+    ]
+  }
+]
 
 export const generateSlug = (title: string) => {
   return title

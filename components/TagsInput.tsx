@@ -1,41 +1,57 @@
 'use client'
 
-import React from 'react'
-import { ReactTags, Tag } from 'react-tag-autocomplete'
-import { Control, useController } from 'react-hook-form'
+import React, { useState } from 'react'
 import { X } from 'lucide-react'
-import './tags.css'
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 
 interface TagsInputProps {
-  control: Control<any>
-  name: string
+  value: string[]
+  onChange: (value: string[]) => void
 }
 
-const TagsInput = ({ control, name }: TagsInputProps) => {
-  const { field } = useController({
-    name,
-    control,
-    defaultValue: []
-  })
+const TagsInput = ({ value, onChange }: TagsInputProps) => {
+  const [inputValue, setInputValue] = useState('')
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && inputValue.trim() !== '') {
+      e.preventDefault()
+      const newTag = inputValue.trim().toLowerCase()
+      if (value.length < 3 && !value.includes(newTag)) {
+        onChange([...value, newTag])
+        setInputValue('')
+      }
+    }
+  }
+
+  const removeTag = (indexToRemove: number) => {
+    onChange(value.filter((_, index) => index !== indexToRemove))
+  }
 
   return (
-    <div className='w-full'>
-      <label className='text-sm font-medium'>Tags</label>
-      <ReactTags
-        selected={field.value || []}
-        suggestions={[]}
-        allowNew
-        onAdd={(newTag) => {
-          if ((field.value || []).length < 3) {
-            field.onChange([...(field.value || []), newTag])
-          }
-        }}
-        onDelete={(tagIndex) => {
-          field.onChange(field.value.filter((_: any, i: any) => i !== tagIndex))
-        }}
-        placeholderText='Agregar tag...'
-        
+    <div className='flex flex-col gap-2'>
+      <Input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+        placeholder="Escribe y presiona Enter para agregar (máx. 3)"
+        disabled={value.length >= 3}
+        className="w-full"
       />
+      <div className='flex flex-wrap gap-2'>
+        {value.map((tag: string, index: number) => (
+          <Badge 
+            key={index} 
+            variant="secondary"
+            className='text-sm font-medium flex items-center gap-1 cursor-pointer hover:bg-destructive hover:text-destructive-foreground'
+            onClick={() => removeTag(index)}
+          >
+            {tag}
+            <X className='h-3 w-3' />
+          </Badge>
+        ))}
+      </div>
     </div>
   )
 }

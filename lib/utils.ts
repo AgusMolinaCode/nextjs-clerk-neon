@@ -16,6 +16,8 @@ export interface Product {
   userId: string
   createdAt: Date
   updatedAt: Date
+  tags: string[]
+  category: string
 }
 
 export type ProductInput = {
@@ -26,4 +28,6 @@ export type ProductInput = {
   imageUrl?: string
   userId: string
   city?: string
+  tags?: string[]
+  category?: string
 }

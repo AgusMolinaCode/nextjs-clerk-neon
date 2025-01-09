@@ -13,6 +13,8 @@ export interface ProductInput {
   imageUrl?: string | null
   userId: string
   city?: string | null
+  category?: string
+  tags?: string | null
 }
 
 export async function getProducts(
@@ -73,7 +75,9 @@ export async function createProduct(data: ProductInput) {
         price: data.price,
         imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
         userId: data.userId,
-        city: data.city
+        city: data.city,
+        tags: data.tags ? JSON.stringify(data.tags) : '',
+        category: data.category || ''
       }
     })
 
@@ -101,7 +105,9 @@ export async function updateProduct(productData: ProductInput) {
         price: productData.price,
         imageUrl: productData.imageUrl ? JSON.parse(productData.imageUrl) : [],
         userId: productData.userId,
-        city: productData.city
+        city: productData.city,
+        tags: productData.tags ? JSON.stringify(productData.tags) : '',
+        category: productData.category || ''
       }
     })
     revalidatePath('/profile')

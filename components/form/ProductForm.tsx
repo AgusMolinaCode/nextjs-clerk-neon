@@ -23,6 +23,7 @@ import ButtonSubmit from '../ButtonSubmit'
 import { generateSlug } from '@/constants'
 import { ArrowBigLeft, ArrowLeft } from 'lucide-react'
 import TagsInput from '../TagsInput'
+import SelectCategories from '../SelectCategories'
 
 interface ProductFormProps {
   userId: string
@@ -47,7 +48,9 @@ export function ProductForm({
       description: '',
       price: undefined,
       imageUrl: [] as string[],
-      city: ''
+      city: '',
+      tags: [],
+      category: ''
     }
   })
 
@@ -66,7 +69,9 @@ export function ProductForm({
         description: product.description ?? undefined,
         price: product.price,
         imageUrl: product.imageUrl ? JSON.parse(product.imageUrl) : [],
-        city: product.city ?? undefined
+        city: product.city ?? undefined,
+        tags: product.tags ? JSON.parse(product.tags) : [],
+        category: product.category ?? ''
       })
     }
   }, [product, form])
@@ -84,7 +89,9 @@ export function ProductForm({
       price: values.price ?? 0,
       imageUrl: JSON.stringify(values.imageUrl),
       userId: userId,
-      city: values.city
+      city: values.city,
+      tags: JSON.stringify(values.tags),
+      category: values.category
     }
 
     try {
@@ -104,7 +111,9 @@ export function ProductForm({
           description: '',
           price: 0,
           imageUrl: [],
-          city: ''
+          city: '',
+          tags: [],
+          category: ''
         })
         onSuccess?.()
       }
@@ -125,7 +134,9 @@ export function ProductForm({
       price: values.price ?? 0,
       imageUrl: JSON.stringify(values.imageUrl ?? []),
       userId: userId,
-      city: values.city ?? ''
+      city: values.city ?? '',
+      tags: JSON.stringify(values.tags ?? []),
+      category: values.category ?? ''
     }
 
     try {
@@ -145,7 +156,9 @@ export function ProductForm({
           description: '',
           price: 0,
           imageUrl: [],
-          city: ''
+          city: '',
+          tags: [],
+          category: ''
         })
         onSuccess?.()
       }
@@ -175,7 +188,9 @@ export function ProductForm({
                   description: '',
                   price: 0,
                   imageUrl: [],
-                  city: ''
+                  city: '',
+                  tags: [],
+                  category: ''
                 })
                 onCancelEdit?.()
               }}
@@ -238,17 +253,39 @@ export function ProductForm({
               )}
             />
           </div>
-          <div>
+          <div className='flex w-full flex-col justify-between gap-2 sm:flex-row md:gap-8'>
             <FormField
               control={form.control}
               name="tags"
               render={({ field }) => (
-                <FormItem>
-                  <TagsInput control={form.control} name="tags" />
+                <FormItem className='w-full'>
+                  <FormLabel>Tags</FormLabel>
+                  <FormControl>
+                    <TagsInput value={field.value} onChange={field.onChange} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            <div className='w-full'>
+              {/* categoria select  */}
+              <FormField
+                control={form.control}
+                name='category'
+                render={({ field }) => (
+                  <FormItem className='w-full space-y-0'>
+                    <FormLabel>Categoría</FormLabel>
+                    <FormControl>
+                      <SelectCategories 
+                        value={field.value} 
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
           <div className='flex min-h-[250px] w-full flex-col justify-between gap-2 sm:flex-row md:gap-8'>
             <ImageUploadField control={form.control} name='imageUrl' />
