@@ -18,6 +18,8 @@ export interface Product {
   updatedAt: Date
   tags: string[]
   category: string
+  facebook?: string
+  instagram?: string
 }
 
 export type ProductInput = {
@@ -30,4 +32,8 @@ export type ProductInput = {
   city?: string
   tags?: string[]
   category?: string
+  facebook?: string
+  instagram?: string
+  priceType?: string
+  isUrgent?: boolean
 }

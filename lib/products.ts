@@ -9,12 +9,16 @@ export interface ProductInput {
   title: string
   slug: string
   description?: string | null
-  price: number
+  price?: number | null
+  priceType?: 'fixed' | 'hourly' | 'project'
+  isUrgent?: boolean
   imageUrl?: string | null
   userId: string
   city?: string | null
   category?: string
-  tags?: string | null
+  tags?: string[]
+  facebook?: string  
+  instagram?: string
 }
 
 export async function getProducts(
@@ -72,17 +76,20 @@ export async function createProduct(data: ProductInput) {
         title: data.title,
         slug: slug,
         description: data.description,
-        price: data.price,
+        price: data.price ?? 0,
+        priceType: data.priceType || "fixed", 
+        isUrgent: data.isUrgent || false,
         imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
         userId: data.userId,
         city: data.city,
-        tags: data.tags ? JSON.stringify(data.tags) : '',
-        category: data.category || ''
+        tags: Array.isArray(data.tags) ? data.tags : typeof data.tags === 'string' ? JSON.parse(data.tags) : [],
+        category: data.category || "",
+        facebook: data.facebook || "",
+        instagram: data.instagram || ""
       }
     })
 
     revalidatePath('/profile')
-
     return { product: JSON.parse(JSON.stringify(product)), error: null }
   } catch (error) {
     console.error('Error al crear el producto:', error)
@@ -102,12 +109,16 @@ export async function updateProduct(productData: ProductInput) {
         title: productData.title,
         slug: productData.slug,
         description: productData.description,
-        price: productData.price,
+        price: productData.price ?? 0,
+        priceType: productData.priceType || "fixed",
+        isUrgent: productData.isUrgent || false,
         imageUrl: productData.imageUrl ? JSON.parse(productData.imageUrl) : [],
         userId: productData.userId,
         city: productData.city,
-        tags: productData.tags ? JSON.stringify(productData.tags) : '',
-        category: productData.category || ''
+        tags: Array.isArray(productData.tags) ? productData.tags : typeof productData.tags === 'string' ? JSON.parse(productData.tags) : [],
+        category: productData.category || "",
+        facebook: productData.facebook || "",
+        instagram: productData.instagram || ""
       }
     })
     revalidatePath('/profile')

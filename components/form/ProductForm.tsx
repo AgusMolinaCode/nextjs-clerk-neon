@@ -13,7 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormMessage
+  FormMessage,
+  FormDescription
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -24,6 +25,14 @@ import { generateSlug } from '@/constants'
 import { ArrowBigLeft, ArrowLeft } from 'lucide-react'
 import TagsInput from '../TagsInput'
 import SelectCategories from '../SelectCategories'
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem
+} from '@/components/ui/select'
+import { Checkbox } from '@/components/ui/checkbox'
 
 interface ProductFormProps {
   userId: string
@@ -47,10 +56,14 @@ export function ProductForm({
       slug: '',
       description: '',
       price: undefined,
+      priceType: 'fixed',
+      isUrgent: false,
       imageUrl: [] as string[],
       city: '',
       tags: [],
-      category: ''
+      category: '',
+      facebook: '',
+      instagram: ''
     }
   })
 
@@ -67,11 +80,16 @@ export function ProductForm({
         title: product.title,
         slug: product.slug,
         description: product.description ?? undefined,
-        price: product.price,
+        price: product.price ?? undefined,
+        priceType:
+          (product.priceType as 'fixed' | 'hourly' | 'project') ?? 'fixed',
+        isUrgent: product.isUrgent ?? false,
         imageUrl: product.imageUrl ? JSON.parse(product.imageUrl) : [],
         city: product.city ?? undefined,
-        tags: product.tags ? JSON.parse(product.tags) : [],
-        category: product.category ?? ''
+        tags: product.tags ?? [],
+        category: product.category ?? '',
+        facebook: product.facebook ?? '',
+        instagram: product.instagram ?? ''
       })
     }
   }, [product, form])
@@ -90,8 +108,10 @@ export function ProductForm({
       imageUrl: JSON.stringify(values.imageUrl),
       userId: userId,
       city: values.city,
-      tags: JSON.stringify(values.tags),
-      category: values.category
+      tags: values.tags ?? [],
+      category: values.category,
+      facebook: values.facebook,
+      instagram: values.instagram
     }
 
     try {
@@ -110,10 +130,13 @@ export function ProductForm({
           slug: '',
           description: '',
           price: 0,
+          priceType: 'fixed',
           imageUrl: [],
           city: '',
           tags: [],
-          category: ''
+          category: '',
+          facebook: '',
+          instagram: ''
         })
         onSuccess?.()
       }
@@ -135,8 +158,10 @@ export function ProductForm({
       imageUrl: JSON.stringify(values.imageUrl ?? []),
       userId: userId,
       city: values.city ?? '',
-      tags: JSON.stringify(values.tags ?? []),
-      category: values.category ?? ''
+      tags: values.tags ?? [],
+      category: values.category ?? '',
+      facebook: values.facebook ?? '',
+      instagram: values.instagram ?? ''
     }
 
     try {
@@ -155,10 +180,13 @@ export function ProductForm({
           slug: '',
           description: '',
           price: 0,
+          priceType: 'fixed',
           imageUrl: [],
           city: '',
           tags: [],
-          category: ''
+          category: '',
+          facebook: '',
+          instagram: ''
         })
         onSuccess?.()
       }
@@ -187,10 +215,13 @@ export function ProductForm({
                   slug: '',
                   description: '',
                   price: 0,
+                  priceType: 'fixed',
                   imageUrl: [],
                   city: '',
                   tags: [],
-                  category: ''
+                  category: '',
+                  facebook: '',
+                  instagram: ''
                 })
                 onCancelEdit?.()
               }}
@@ -215,25 +246,56 @@ export function ProductForm({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='price'
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel>Precio</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        placeholder='0.00'
-                        {...field}
-                        className='appearance-none'
-                        style={{ MozAppearance: 'textfield' }}
-                      />
-                    </FormControl>
-                    <FormMessage>{fieldState.error?.message}</FormMessage>
-                  </FormItem>
-                )}
-              />
+              <div className='flex flex-col gap-2'>
+                <FormField
+                  control={form.control}
+                  name='price'
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel>Precio</FormLabel>
+                      <div className='flex items-end gap-2'>
+                        <FormControl>
+                          <Input
+                            type='number'
+                            placeholder='0.00'
+                            {...field}
+                            className='appearance-none'
+                            style={{ MozAppearance: 'textfield' }}
+                          />
+                        </FormControl>
+                        <FormField
+                          control={form.control}
+                          name='priceType'
+                          render={({ field }) => (
+                            <FormItem>
+                              <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                              >
+                                <SelectTrigger className='w-[130px]'>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value='fixed'>
+                                    Precio Fijo
+                                  </SelectItem>
+                                  <SelectItem value='hourly'>
+                                    Por Hora
+                                  </SelectItem>
+                                  <SelectItem value='project'>
+                                    Por Proyecto
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <FormMessage>{fieldState.error?.message}</FormMessage>
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
             <FormField
               control={form.control}
@@ -256,7 +318,7 @@ export function ProductForm({
           <div className='flex w-full flex-col justify-between gap-2 sm:flex-row md:gap-8'>
             <FormField
               control={form.control}
-              name="tags"
+              name='tags'
               render={({ field }) => (
                 <FormItem className='w-full'>
                   <FormLabel>Tags</FormLabel>
@@ -267,21 +329,47 @@ export function ProductForm({
                 </FormItem>
               )}
             />
-            <div className='w-full'>
-              {/* categoria select  */}
+            <div className='flex w-full gap-2'>
               <FormField
                 control={form.control}
                 name='category'
                 render={({ field }) => (
-                  <FormItem className='w-full space-y-0'>
+                  <FormItem className='w-full space-y-2'>
                     <FormLabel>Categoría</FormLabel>
                     <FormControl>
-                      <SelectCategories 
-                        value={field.value} 
+                      <SelectCategories
+                        value={field.value}
                         onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='isUrgent'
+                render={({ field }) => (
+                  <FormItem className='flex flex-col items-start space-y-2'>
+                    <FormLabel>Urgencia</FormLabel>
+                    <FormControl>
+                      <div className='flex items-center space-x-2'>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          className='h-5 w-5 border-red-500 data-[state=checked]:bg-red-500'
+                        />
+                        <label
+                          htmlFor='isUrgent'
+                          className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+                        >
+                          Servicio Urgente
+                        </label>
+                      </div>
+                    </FormControl>
+                    <p className='text-xs text-muted-foreground'>
+                      Marca esta opción si ofreces servicio de urgencias
+                    </p>
                   </FormItem>
                 )}
               />
@@ -305,6 +393,50 @@ export function ProductForm({
                 </FormItem>
               )}
             />
+          </div>
+          <div className='flex w-full justify-between gap-2 sm:flex-row md:gap-8'>
+          
+              <FormField
+                control={form.control}
+                name='facebook'
+                render={({ field }) => (
+                  <FormItem className='w-full'>
+                    <FormLabel>Facebook</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='URL de tu página de Facebook'
+                        {...field}
+                        className='w-full'
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Ejemplo: https://facebook.com/tu-pagina
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='instagram'
+                render={({ field }) => (
+                  <FormItem className='w-full'>
+                    <FormLabel>Instagram</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='URL de tu perfil de Instagram'
+                        {...field}
+                        className='w-full'
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Ejemplo: https://instagram.com/tu-perfil
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            
           </div>
 
           <ButtonSubmit disabled={isLoading}>
