@@ -8,7 +8,7 @@ interface ButtonSubmitProps {
 const ButtonSubmit = ({ children, disabled }: ButtonSubmitProps) => {
   return (
     <button
-      className={`group relative inline-flex h-12 w-full items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-100 dark:bg-white dark:text-neutral-800 ${
+      className={`group relative inline-flex h-12 mt-8 lg:mt-4 w-full items-center justify-center overflow-hidden rounded-md bg-neutral-950 px-6 font-medium text-neutral-100 dark:bg-white dark:text-neutral-800 ${
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       }`}
       disabled={disabled}

@@ -33,7 +33,7 @@ const page = async () => {
 
   const productsWithCorrectCity = products.map(product => ({
     ...product,
-    city: product.city ?? undefined,
+    city: product.city ?? undefined
   }))
 
   return (

@@ -104,7 +104,9 @@ export function ProductForm({
       title: values.title,
       slug: generateSlug(values.title),
       description: values.description,
-      price: values.price ?? 0,
+      price: values.price ?? undefined,
+      priceType: values.priceType,
+      isUrgent: values.isUrgent,
       imageUrl: JSON.stringify(values.imageUrl),
       userId: userId,
       city: values.city,
@@ -154,7 +156,9 @@ export function ProductForm({
       title: values.title ?? '',
       slug: generateSlug(values.title ?? ''),
       description: values.description ?? '',
-      price: values.price ?? 0,
+      price: values.price ?? undefined,
+      priceType: values.priceType,
+      isUrgent: values.isUrgent,
       imageUrl: JSON.stringify(values.imageUrl ?? []),
       userId: userId,
       city: values.city ?? '',
@@ -204,7 +208,7 @@ export function ProductForm({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className='flex h-full w-full flex-col justify-between gap-2 rounded-md border bg-gray-50 p-2 dark:border-gray-800 dark:bg-gray-950'
+          className='flex h-full w-full flex-col justify-between gap-2 rounded-md border bg-gray-50 p-1 dark:border-gray-800 dark:bg-gray-950'
         >
           {product && (
             <button
@@ -227,11 +231,11 @@ export function ProductForm({
               }}
               className='flex items-center gap-1 text-xs text-blue-500'
             >
-              <ArrowLeft className='h-4 w-4' />
+              <ArrowLeft className='h-4 w-4'/>
               Cancelar Edición
             </button>
           )}
-          <div className='flex w-full flex-col justify-between gap-2 sm:flex-row md:gap-8'>
+          <div className='flex w-full flex-col justify-between gap-2 lg:flex-row md:gap-8'>
             <div className='flex w-full flex-col justify-center space-y-3'>
               <FormField
                 control={form.control}
@@ -315,7 +319,7 @@ export function ProductForm({
               )}
             />
           </div>
-          <div className='flex w-full flex-col justify-between gap-2 sm:flex-row md:gap-8'>
+          <div className='flex w-full flex-col justify-between gap-2 md:flex-row md:gap-8'>
             <FormField
               control={form.control}
               name='tags'
@@ -329,7 +333,7 @@ export function ProductForm({
                 </FormItem>
               )}
             />
-            <div className='flex w-full gap-2'>
+            <div className='flex w-full flex-col gap-2 md:flex-row'>
               <FormField
                 control={form.control}
                 name='category'
@@ -394,49 +398,47 @@ export function ProductForm({
               )}
             />
           </div>
-          <div className='flex w-full justify-between gap-2 sm:flex-row md:gap-8'>
-          
-              <FormField
-                control={form.control}
-                name='facebook'
-                render={({ field }) => (
-                  <FormItem className='w-full'>
-                    <FormLabel>Facebook</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='URL de tu página de Facebook'
-                        {...field}
-                        className='w-full'
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Ejemplo: https://facebook.com/tu-pagina
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='instagram'
-                render={({ field }) => (
-                  <FormItem className='w-full'>
-                    <FormLabel>Instagram</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='URL de tu perfil de Instagram'
-                        {...field}
-                        className='w-full'
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Ejemplo: https://instagram.com/tu-perfil
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            
+          <div className='flex w-full flex-col justify-between gap-2 md:flex-row md:gap-8'>
+            <FormField
+              control={form.control}
+              name='facebook'
+              render={({ field }) => (
+                <FormItem className='w-full'>
+                  <FormLabel>Facebook</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='URL de tu página de Facebook'
+                      {...field}
+                      className='w-full'
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Ejemplo: https://facebook.com/tu-pagina
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='instagram'
+              render={({ field }) => (
+                <FormItem className='w-full'>
+                  <FormLabel>Instagram</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='URL de tu perfil de Instagram'
+                      {...field}
+                      className='w-full'
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Ejemplo: https://instagram.com/tu-perfil
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
           <ButtonSubmit disabled={isLoading}>

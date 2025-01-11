@@ -17,7 +17,7 @@ export interface ProductInput {
   city?: string | null
   category?: string
   tags?: string[]
-  facebook?: string  
+  facebook?: string
   instagram?: string
 }
 
@@ -77,15 +77,19 @@ export async function createProduct(data: ProductInput) {
         slug: slug,
         description: data.description,
         price: data.price ?? 0,
-        priceType: data.priceType || "fixed", 
+        priceType: data.priceType || 'fixed',
         isUrgent: data.isUrgent || false,
         imageUrl: data.imageUrl ? JSON.parse(data.imageUrl) : [],
         userId: data.userId,
         city: data.city,
-        tags: Array.isArray(data.tags) ? data.tags : typeof data.tags === 'string' ? JSON.parse(data.tags) : [],
-        category: data.category || "",
-        facebook: data.facebook || "",
-        instagram: data.instagram || ""
+        tags: Array.isArray(data.tags)
+          ? data.tags
+          : typeof data.tags === 'string'
+            ? JSON.parse(data.tags)
+            : [],
+        category: data.category || '',
+        facebook: data.facebook || '',
+        instagram: data.instagram || ''
       }
     })
 
@@ -110,15 +114,19 @@ export async function updateProduct(productData: ProductInput) {
         slug: productData.slug,
         description: productData.description,
         price: productData.price ?? 0,
-        priceType: productData.priceType || "fixed",
+        priceType: productData.priceType || 'fixed',
         isUrgent: productData.isUrgent || false,
         imageUrl: productData.imageUrl ? JSON.parse(productData.imageUrl) : [],
         userId: productData.userId,
         city: productData.city,
-        tags: Array.isArray(productData.tags) ? productData.tags : typeof productData.tags === 'string' ? JSON.parse(productData.tags) : [],
-        category: productData.category || "",
-        facebook: productData.facebook || "",
-        instagram: productData.instagram || ""
+        tags: Array.isArray(productData.tags)
+          ? productData.tags
+          : typeof productData.tags === 'string'
+            ? JSON.parse(productData.tags)
+            : [],
+        category: productData.category || '',
+        facebook: productData.facebook || '',
+        instagram: productData.instagram || ''
       }
     })
     revalidatePath('/profile')

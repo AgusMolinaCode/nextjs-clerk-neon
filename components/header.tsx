@@ -15,7 +15,7 @@ import { Button } from './ui/button'
 
 export default function Header() {
   return (
-    <header className='   py-6 mb-10 '>
+    <header className='py-6 mb-4 lg:mb-10 '>
       <nav className='container flex items-center justify-between'>
         <Sheet>
           <SheetTrigger className='sm:hidden'>
