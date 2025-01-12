@@ -25,7 +25,7 @@ export default function Header() {
             <ul className='flex flex-col gap-3 text-sm'>
               <li className='font-sans text-2xl'>
                 <SheetClose asChild>
-                  <Link href='/'>next</Link>
+                  <Link href='/'>Arreglalo Ya.</Link>
                 </SheetClose>
               </li>
             </ul>
@@ -34,9 +34,11 @@ export default function Header() {
 
         <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
           <li className='font-serif text-lg font-bold'>
-            <Link href='/'>next</Link>
+            <Link href='/'>Arreglalo Ya.</Link>
           </li>
         </ul>
+
+      
 
         <div className='flex items-center justify-between gap-6'>
           <ThemeToggle />
@@ -44,7 +46,7 @@ export default function Header() {
             <UserButton />
             <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
               <li className=' font-bold'>
-                <Link href='/profile'>profile</Link>
+                <Link href='/profile'>Profile</Link>
               </li>
             </ul>
           </SignedIn>

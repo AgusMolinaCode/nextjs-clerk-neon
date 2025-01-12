@@ -49,7 +49,10 @@ const ProductList = ({
             onCancelEdit={handleCancelEdit} // Pasar el callback de cancelación
           />
         </div>
-        <div className='pt-6 lg:pt-16'>
+        <div className='pt-4 lg:pt-6 w-full mx-auto flex justify-start md:max-w-7xl'>
+            <Insights />
+          </div>
+        <div className='pt-4 lg:pt-6'>
           <div className='mx-auto flex w-full items-center justify-start gap-2 md:max-w-7xl'>
             <h1 className='text-lg font-bold'>Mis Publicaciones</h1>
           </div>
@@ -110,9 +113,6 @@ const ProductList = ({
               })}
             </ul>
           )}
-          <div className='mt-[1rem] w-full'>
-            <Insights />
-          </div>
         </div>
       </div>
     </div>

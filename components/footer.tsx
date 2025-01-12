@@ -13,9 +13,9 @@ export default function Footer() {
             target='_blank'
             rel='noopener noreferrer'
             className='text-primary transition-colors hover:text-accent-foreground'
-            href='https://www.hamedbahram.io/'
+            href='https://www.linkedin.com/in/agustin-molina-994635138/'
           >
-            Studio H
+            Agustin Molina
           </Link>
         </p>
       </div>
