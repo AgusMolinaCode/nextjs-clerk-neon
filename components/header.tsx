@@ -1,24 +1,34 @@
+'use client'
+
 import Link from 'next/link'
-
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { ThemeToggle } from '@/components/theme-toggle'
-
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTrigger
-} from '@/components/ui/sheet'
-
-import VariableFontHoverByLetter from '@/components/fancy/variable-font-hover-by-letter'
-
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Menu } from 'lucide-react'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import { Button } from './ui/button'
 
 export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   return (
-    <header className='mb-4 py-6 lg:mb-10'>
-      <nav className='container flex items-center justify-between'>
+    <motion.header
+      className={`fixed top-0 w-full transition-all duration-300 z-50 ${isScrolled ? 'bg-gray-700/90  backdrop-blur-sm ' : 'bg-transparent'}`}
+      animate={{ backgroundColor: isScrolled ? 'rgba(0, 0, 0, 0.5)' : 'transparent' }}
+    >
+      <nav className='container flex items-center justify-between py-6'>
         <Sheet>
           <SheetTrigger className='sm:hidden'>
             <Menu className='h-6 w-6' />
@@ -35,17 +45,10 @@ export default function Header() {
         </Sheet>
 
         <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
-          <li className='font-serif text-lg font-bold'>
+          <li className='font-serif text-lg font-bold hover:scale-105 transition-all duration-300'>
             <Link href='/'>Arreglalo Ya.</Link>
           </li>
         </ul>
-
-        <VariableFontHoverByLetter
-          label='Arreglalo Ya.'
-          staggerDuration={0.03}
-          fromFontVariationSettings="'wght' 400, 'slnt' 0"
-          toFontVariationSettings="'wght' 900, 'slnt' -10"
-        />
 
         <div className='flex items-center justify-between gap-6'>
           <ThemeToggle />
@@ -64,6 +67,6 @@ export default function Header() {
           </SignedOut>
         </div>
       </nav>
-    </header>
+    </motion.header>
   )
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from '@/components/ui/toaster'
 import Providers from '@/components/providers'
 import Header from '@/components/header'
 import Footer from '@/components/footer'
@@ -31,7 +31,9 @@ export default function RootLayout({
       <html lang='en' className='scroll-smooth' suppressHydrationWarning>
         <body className={cn('flex min-h-screen flex-col', poppins.variable)}>
           <Providers>
-            <Header />
+            <div className='pb-20'>
+              <Header />
+            </div>
             <main className='grow'>{children}</main>
             <Toaster />
             <Footer />

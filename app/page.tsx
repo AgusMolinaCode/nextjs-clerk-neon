@@ -14,7 +14,7 @@ export default async function Home() {
             <p className='text-gray-500 dark:text-gray-500 mt-2'>Sé el primero en publicar un servicio</p>
           </div>
         ) : (
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+          <div className='grid grid-cols-1 gap-4'>
             {products.map((product) => (
               <ProductCard 
                 key={String(product.id)} 
