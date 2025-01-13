@@ -9,13 +9,15 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet'
 
+import VariableFontHoverByLetter from '@/components/fancy/variable-font-hover-by-letter'
+
 import { Menu } from 'lucide-react'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import { Button } from './ui/button'
 
 export default function Header() {
   return (
-    <header className='py-6 mb-4 lg:mb-10 '>
+    <header className='mb-4 py-6 lg:mb-10'>
       <nav className='container flex items-center justify-between'>
         <Sheet>
           <SheetTrigger className='sm:hidden'>
@@ -38,14 +40,19 @@ export default function Header() {
           </li>
         </ul>
 
-      
+        <VariableFontHoverByLetter
+          label='Arreglalo Ya.'
+          staggerDuration={0.03}
+          fromFontVariationSettings="'wght' 400, 'slnt' 0"
+          toFontVariationSettings="'wght' 900, 'slnt' -10"
+        />
 
         <div className='flex items-center justify-between gap-6'>
           <ThemeToggle />
           <SignedIn>
             <UserButton />
             <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
-              <li className=' font-bold'>
+              <li className='font-bold'>
                 <Link href='/profile'>Profile</Link>
               </li>
             </ul>

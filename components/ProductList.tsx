@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import { ProductForm } from './form/ProductForm'
-import { ScrollArea } from './ui/scroll-area'
 import Link from 'next/link'
 import Image from 'next/image'
 import ProductDelete from './ProductDelete'
