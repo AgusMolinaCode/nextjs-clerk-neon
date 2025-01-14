@@ -9,6 +9,7 @@ import Footer from '@/components/footer'
 import { ClerkProvider } from '@clerk/nextjs'
 
 import './globals.css'
+import ThemeWrapper from '@/components/ThemeWrapper'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -31,12 +32,14 @@ export default function RootLayout({
       <html lang='en' className='scroll-smooth' suppressHydrationWarning>
         <body className={cn('flex min-h-screen flex-col', poppins.variable)}>
           <Providers>
-            <div className='pb-20'>
-              <Header />
-            </div>
-            <main className='grow'>{children}</main>
-            <Toaster />
-            <Footer />
+            <ThemeWrapper>
+              <div className='pb-20'>
+                <Header />
+              </div>
+              <main className='grow'>{children}</main>
+              <Toaster />
+              <Footer />
+            </ThemeWrapper>
           </Providers>
         </body>
       </html>
