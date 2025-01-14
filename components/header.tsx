@@ -14,7 +14,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0)
+      setIsScrolled(window.scrollY > 70)
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -23,10 +23,35 @@ export default function Header() {
     }
   }, [])
 
+  const variants = {
+    top: {
+      maxWidth: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0)',
+      transition: {
+        duration: 1,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    },
+    scrolled: {
+      maxWidth: '64rem',
+      backgroundColor: 'rgba(0, 0, 0)',
+      transition: {
+        duration: 1.5,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    }
+  }
+
   return (
     <motion.header
-      className={`fixed top-0 w-full transition-all duration-300 z-50 ${isScrolled ? 'bg-gray-700/90  backdrop-blur-sm ' : 'bg-transparent'}`}
-      animate={{ backgroundColor: isScrolled ? 'rgba(0, 0, 0, 0.5)' : 'transparent' }}
+      className={`fixed top-0 w-full z-50 ${isScrolled ? 'bg-black mt-2 rounded-lg' : 'bg-transparent'}`}
+      initial="top"
+      animate={isScrolled ? "scrolled" : "top"}
+      variants={variants}
+      style={{
+        left: '50%',
+        transform: 'translateX(-50%)'
+      }}
     >
       <nav className='container flex items-center justify-between py-6'>
         <Sheet>
@@ -45,24 +70,27 @@ export default function Header() {
         </Sheet>
 
         <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
-          <li className='font-serif text-lg font-bold hover:scale-105 transition-all duration-300'>
+          <li className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'} font-serif text-lg font-bold hover:scale-105 transition-all duration-300`}>
             <Link href='/'>Arreglalo Ya.</Link>
           </li>
         </ul>
 
         <div className='flex items-center justify-between gap-6'>
-          <ThemeToggle />
+          <ThemeToggle 
+            sunClassName={isScrolled ? 'text-orange-300' : 'text-orange-300'} 
+            moonClassName={isScrolled ? 'text-gray-200' : 'text-gray-800'} 
+          />
           <SignedIn>
             <UserButton />
             <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
-              <li className='font-bold'>
+              <li className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'}`}>
                 <Link href='/profile'>Profile</Link>
               </li>
             </ul>
           </SignedIn>
           <SignedOut>
             <SignInButton>
-              <Button>Sign In</Button>
+              <Button className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'}`}>Sign In</Button>
             </SignInButton>
           </SignedOut>
         </div>

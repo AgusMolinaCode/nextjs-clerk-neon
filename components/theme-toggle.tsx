@@ -6,7 +6,12 @@ import { useTheme } from 'next-themes'
 import { Button } from '@/components/ui/button'
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
 
-export function ThemeToggle() {
+interface ThemeToggleProps {
+  sunClassName?: string
+  moonClassName?: string
+}
+
+export function ThemeToggle({ sunClassName, moonClassName }: ThemeToggleProps) {
   const { setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -21,17 +26,17 @@ export function ThemeToggle() {
   return (
     <Button
       size='sm'
-      variant='ghost'
+      variant={null}
       onClick={() => {
         setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
       }}
+      className='bg-transparent'
     >
       {resolvedTheme === 'dark' ? (
-        <SunIcon className='size-4 text-orange-300' />
+        <SunIcon className={`size-4 text-orange-300 ${sunClassName} bg-transparent`} />
       ) : (
-        <MoonIcon className='size-4 text-sky-950' />
+        <MoonIcon className={`size-4 text-sky-950 ${moonClassName} bg-transparent`} />
       )}
-
       <span className='sr-only'>Toggle theme</span>
     </Button>
   )
