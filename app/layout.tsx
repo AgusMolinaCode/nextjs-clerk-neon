@@ -33,7 +33,7 @@ export default function RootLayout({
         <body className={cn('flex min-h-screen flex-col', poppins.variable)}>
           <Providers>
             <ThemeWrapper>
-              <div className='pb-20'>
+              <div className='pb-20 px-2'>
                 <Header />
               </div>
               <main className='grow'>{children}</main>

@@ -35,7 +35,7 @@ export function ThemeToggle({ sunClassName, moonClassName }: ThemeToggleProps) {
       {resolvedTheme === 'dark' ? (
         <SunIcon className={`size-4 text-orange-300 ${sunClassName} bg-transparent`} />
       ) : (
-        <MoonIcon className={`size-4 text-sky-950 ${moonClassName} bg-transparent`} />
+        <MoonIcon className={`size-4  ${moonClassName} bg-transparent`} />
       )}
       <span className='sr-only'>Toggle theme</span>
     </Button>

@@ -44,16 +44,20 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.18.0",
     "@types/lodash": "^4.17.14",
     "@types/node": "^22.10.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "eslint": "^9.18.0",
+    "eslint": "^8.57.1",
     "eslint-config-next": "14.2.11",
+    "eslint-plugin-react": "^7.37.4",
     "framer-motion": "^11.17.0",
+    "globals": "^15.14.0",
     "postcss": "^8.4.47",
     "prisma": "^6.0.1",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
   }
 }

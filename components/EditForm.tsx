@@ -9,5 +9,4 @@ const EditForm = ({ product }: { product: Product }) => {
     </div>
   )
 }
-
 export default EditForm

@@ -34,9 +34,10 @@ export default function Header() {
     },
     scrolled: {
       maxWidth: '64rem',
-      backgroundColor: 'rgba(0, 0, 0)',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backdropFilter: 'blur(20px)',
       transition: {
-        duration: 1.5,
+        duration: 0.8,
         ease: [0.4, 0, 0.2, 1]
       }
     }
@@ -44,7 +45,7 @@ export default function Header() {
 
   return (
     <motion.header
-      className={`fixed top-0 w-full z-50 ${isScrolled ? 'bg-black mt-2 rounded-lg' : 'bg-transparent'}`}
+      className={`fixed px-4 top-0 w-full z-50 ${isScrolled ? 'bg-black/20 border border-gray-800 mt-2 rounded-lg' : 'bg-transparent'}`}
       initial="top"
       animate={isScrolled ? "scrolled" : "top"}
       variants={variants}
@@ -53,10 +54,10 @@ export default function Header() {
         transform: 'translateX(-50%)'
       }}
     >
-      <nav className='container flex items-center justify-between py-6'>
+      <nav className='container flex items-center justify-between py-2 '>
         <Sheet>
           <SheetTrigger className='sm:hidden'>
-            <Menu className='h-6 w-6' />
+            <Menu className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'} h-6 w-6`} />
           </SheetTrigger>
           <SheetContent side='left'>
             <ul className='flex flex-col gap-3 text-sm'>
@@ -70,7 +71,7 @@ export default function Header() {
         </Sheet>
 
         <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
-          <li className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'} font-serif text-lg font-bold hover:scale-105 transition-all duration-300`}>
+          <li className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'} text-lg font-bold hover:scale-105 transition-all duration-300`}>
             <Link href='/'>Arreglalo Ya.</Link>
           </li>
         </ul>
@@ -78,7 +79,7 @@ export default function Header() {
         <div className='flex items-center justify-between gap-6'>
           <ThemeToggle 
             sunClassName={isScrolled ? 'text-orange-300' : 'text-orange-300'} 
-            moonClassName={isScrolled ? 'text-gray-200' : 'text-gray-800'} 
+            moonClassName={isScrolled ? 'text-gray-100' : 'text-gray-800'} 
           />
           <SignedIn>
             <UserButton />

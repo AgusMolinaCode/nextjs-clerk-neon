@@ -1,12 +1,14 @@
 import { getProducts } from '@/lib/products'  
 import ProductCard from '@/components/ProductCard'
+import {HeroSection} from '@/components/HeroSection'
 
 export default async function Home() {
   const products = await getProducts()
 
   return (
     <section>
-      <div className='container'>
+      <div>
+        <HeroSection />
         <h1 className='text-2xl font-semibold'>Inicio</h1>
         {products.length === 0 ? (
           <div className='flex flex-col items-center justify-center min-h-[400px] text-center'>
