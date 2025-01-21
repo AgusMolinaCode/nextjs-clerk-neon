@@ -84,3 +84,12 @@ export const generateSlug = (title: string) => {
     .replace(/[^a-z0-9]+/g, '-') // Reemplaza caracteres no alfanuméricos por guiones
     .replace(/^-+|-+$/g, ''); // Elimina guiones al inicio o al final
 }
+
+export const FRAMEWORKS = ServiceCategories.flatMap(category => 
+  category.items.map(item => ({
+    value: item.value,
+    label: item.label,
+    group: category.label,
+    color: category.color
+  }))
+);

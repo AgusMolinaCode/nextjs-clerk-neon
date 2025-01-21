@@ -21,19 +21,32 @@ export interface ProductInput {
   instagram?: string
 }
 
-export async function getProducts(
-  limit?: number,
-  sort: 'title' | 'createdAt' = 'createdAt',
-  order: 'asc' | 'desc' = 'desc'
-) {
-  const products = await prisma.product.findMany({
-    orderBy: {
-      [sort]: order
-    },
-    take: limit
-  })
+export async function getProducts(city?: string) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        ...(city && { 
+          city: { 
+            contains: city, 
+            mode: 'insensitive' 
+          } 
+        })
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
 
-  return products
+    return products.map(product => ({
+      ...product,
+      createdAt: product.createdAt.toISOString(),
+      updatedAt: product.updatedAt.toISOString(),
+      imageUrl: product.imageUrl as string[]
+    }));
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return [];
+  }
 }
 
 export async function getProductBySlug(slug: string) {
