@@ -12,15 +12,15 @@ import { Product } from '@prisma/client'
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [selectedCity, setSelectedCity] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
   const [cities, setCities] = useState<string[]>([])
 
   useEffect(() => {
     const fetchInitialData = async () => {
       const allProducts = await getProducts()
-      // Extraer solo el nombre de la ciudad (antes de la primera coma)
       const uniqueCities = [...new Set(
         allProducts
-          .map(product => product.city?.split(',')[0].trim())
+          .map(product => product.city?.split(',')[1].trim())
           .filter((city): city is string => city !== null)
       )]
       setCities(uniqueCities)
@@ -36,14 +36,29 @@ export default function Home() {
   }, [])
 
   const handleCityChange = async (city: string) => {
-    const filteredProducts = await getProducts(city ? city : undefined)
-    const productsWithDates = filteredProducts.map(product => ({
-      ...product,
-      createdAt: new Date(product.createdAt),
-      updatedAt: new Date(product.updatedAt)
-    }))
+    const filteredProducts = await getProducts(city || undefined)
+    const productsWithDates = filteredProducts
+      .map(product => ({
+        ...product,
+        createdAt: new Date(product.createdAt),
+        updatedAt: new Date(product.updatedAt)
+      }))
+      .filter(product => !selectedCategory || product.category === selectedCategory)
     setProducts(productsWithDates)
     setSelectedCity(city)
+  }
+
+  const handleCategoryChange = async (category: string) => {
+    const filteredProducts = await getProducts(selectedCity || undefined)
+    const productsWithDates = filteredProducts
+      .map(product => ({
+        ...product,
+        createdAt: new Date(product.createdAt),
+        updatedAt: new Date(product.updatedAt)
+      }))
+      .filter(product => !category || product.category === category)
+    setProducts(productsWithDates)
+    setSelectedCategory(category)
   }
 
   return (
@@ -67,7 +82,7 @@ export default function Home() {
           </h2>
         </div>
         <div className='mx-auto gap-4 flex justify-center pt-6 md:pt-8'>
-          <SelectWithSearch />
+          <SelectWithSearch onCategoryChange={handleCategoryChange} />
           <SelectNativeComponent 
             cities={cities} 
             onCityChange={handleCityChange} 
@@ -76,8 +91,8 @@ export default function Home() {
         {products.length === 0 ? (
           <div className='flex min-h-[400px] flex-col items-center justify-center text-center'>
             <h2 className='text-xl font-medium text-gray-600 dark:text-gray-400'>
-              {selectedCity 
-                ? `No hay publicaciones en ${selectedCity}` 
+              {selectedCity || selectedCategory
+                ? `No hay publicaciones disponibles${selectedCity ? ` en ${selectedCity}` : ''}${selectedCategory ? ` para la categoría seleccionada` : ''}`
                 : 'No hay publicaciones disponibles'}
             </h2>
             <p className='mt-2 text-gray-500 dark:text-gray-500'>

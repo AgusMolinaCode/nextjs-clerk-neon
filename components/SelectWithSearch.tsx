@@ -16,10 +16,16 @@ import { useId, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { FRAMEWORKS } from '@/constants'
 
-export default function SelectWithSearch() {
+export default function SelectWithSearch({ onCategoryChange }: { onCategoryChange: (category: string) => void }) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
+
+  const handleSelect = (currentValue: string) => {
+    setValue(currentValue === value ? "" : currentValue);
+    onCategoryChange(currentValue === value ? "" : currentValue);
+    setOpen(false);
+  };
 
   return (
     <div className="space-y-2 w-60">
@@ -67,8 +73,7 @@ export default function SelectWithSearch() {
                       key={framework.value}
                       value={framework.value}
                       onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
-                        setOpen(false);
+                        handleSelect(currentValue);
                       }}
                     >
                       {framework.label}
