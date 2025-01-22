@@ -92,7 +92,7 @@ export function HeroSection() {
           pasando por carpintería y más. Servicios de calidad cuando los necesitas.
         </p>
       </div>
-      <Carousel items={cards} />
+      {/* <Carousel items={cards} /> */}
     </div>
   )
 }

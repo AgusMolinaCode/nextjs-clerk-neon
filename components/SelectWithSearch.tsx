@@ -14,9 +14,14 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useId, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { FRAMEWORKS } from '@/constants'
 
-export default function SelectWithSearch({ onCategoryChange }: { onCategoryChange: (category: string) => void }) {
+export default function SelectWithSearch({ 
+  onCategoryChange,
+  categories = []
+}: { 
+  onCategoryChange: (category: string) => void
+  categories: Array<{value: string, label: string}>
+}) {
   const id = useId();
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
@@ -40,7 +45,7 @@ export default function SelectWithSearch({ onCategoryChange }: { onCategoryChang
           >
             <span className={cn("truncate", !value && "text-muted-foreground")}>
               {value
-                ? FRAMEWORKS.find((framework) => framework.value === value)?.label
+                ? categories.find((cat) => cat.value === value)?.label
                 : "Selecciona una categoría"}
             </span>
             <ChevronDownIcon
@@ -60,30 +65,29 @@ export default function SelectWithSearch({ onCategoryChange }: { onCategoryChang
             <CommandInput placeholder="Busca una categoría..." />
             <CommandList>
               <CommandEmpty>No se encontraron categorías.</CommandEmpty>
-              {Object.entries(
-                FRAMEWORKS.reduce((acc, framework) => {
-                  if (!acc[framework.group]) acc[framework.group] = [];
-                  acc[framework.group].push(framework);
-                  return acc;
-                }, {} as Record<string, typeof FRAMEWORKS>)
-              ).map(([group, items]) => (
-                <CommandGroup key={group} heading={group}>
-                  {items.map((framework) => (
-                    <CommandItem
-                      key={framework.value}
-                      value={framework.value}
-                      onSelect={(currentValue) => {
-                        handleSelect(currentValue);
-                      }}
-                    >
-                      {framework.label}
-                      {value === framework.value && (
-                        <CheckIcon width={12} height={12} strokeWidth={2} className="ml-auto" />
-                      )}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              ))}
+              <CommandGroup>
+              <CommandItem
+                  value=""
+                  onSelect={handleSelect}
+                >
+                  Todas las categorías
+                  {value === "" && (
+                    <CheckIcon width={12} height={12} strokeWidth={2} className="ml-auto" />
+                  )}
+                </CommandItem>
+                {categories.map((category) => (
+                  <CommandItem
+                    key={category.value}
+                    value={category.value}
+                    onSelect={handleSelect}
+                  >
+                    {category.label}
+                    {value === category.value && (
+                      <CheckIcon width={12} height={12} strokeWidth={2} className="ml-auto" />
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
             </CommandList>
           </Command>
         </PopoverContent>

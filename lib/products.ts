@@ -21,8 +21,42 @@ export interface ProductInput {
   instagram?: string
 }
 
-export async function getProducts(city?: string) {
+export async function getProducts(city?: string, page: number = 1, limit: number = 8) {
   try {
+    // Asegurar que page y limit sean números válidos
+    const validPage = Math.max(1, page);
+    const validLimit = Math.max(1, Math.min(limit, 50)); // máximo 50 por página
+    const skip = (validPage - 1) * validLimit;
+
+    // Primero obtener el total para calcular páginas
+    const total = await prisma.product.count({
+      where: {
+        ...(city && { 
+          city: { 
+            contains: city, 
+            mode: 'insensitive' 
+          } 
+        })
+      }
+    });
+
+    // Si no hay resultados, retornar temprano
+    if (total === 0) {
+      return {
+        products: [],
+        totalPages: 0,
+        currentPage: validPage
+      };
+    }
+
+    // Calcular el total de páginas
+    const totalPages = Math.ceil(total / validLimit);
+    
+    // Asegurar que no excedamos el total de páginas
+    const finalPage = Math.min(validPage, totalPages);
+    const finalSkip = (finalPage - 1) * validLimit;
+
+    // Obtener los productos para la página actual
     const products = await prisma.product.findMany({
       where: {
         ...(city && { 
@@ -34,18 +68,28 @@ export async function getProducts(city?: string) {
       },
       orderBy: {
         createdAt: 'desc'
-      }
+      },
+      skip: finalSkip,
+      take: validLimit
     });
 
-    return products.map(product => ({
-      ...product,
-      createdAt: product.createdAt.toISOString(),
-      updatedAt: product.updatedAt.toISOString(),
-      imageUrl: product.imageUrl as string[]
-    }));
+    return {
+      products: products.map(product => ({
+        ...product,
+        createdAt: product.createdAt.toISOString(),
+        updatedAt: product.updatedAt.toISOString(),
+        imageUrl: product.imageUrl as string[]
+      })),
+      totalPages,
+      currentPage: finalPage
+    };
   } catch (error) {
     console.error('Error fetching products:', error);
-    return [];
+    return {
+      products: [],
+      totalPages: 0,
+      currentPage: 1
+    };
   }
 }
 
