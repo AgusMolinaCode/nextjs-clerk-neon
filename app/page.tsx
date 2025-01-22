@@ -12,13 +12,16 @@ import { ServiceCategories } from '@/constants'
 import { Button } from '@/components/ui/button'
 import PaginationComponent from '@/components/PaginationComponent'
 import { Loader2 } from 'lucide-react'
+import { SearchIcon } from 'lucide-react'
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([])
   const [selectedCity, setSelectedCity] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [cities, setCities] = useState<string[]>([])
-  const [categories, setCategories] = useState<Array<{value: string, label: string}>>([])
+  const [categories, setCategories] = useState<
+    Array<{ value: string; label: string }>
+  >([])
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
@@ -33,8 +36,12 @@ export default function Home() {
           createdAt: new Date(product.createdAt),
           updatedAt: new Date(product.updatedAt)
         }))
-        .filter(product => !selectedCategory || product.category === selectedCategory)
-      
+        .filter(
+          product =>
+            (!selectedCategory || product.category === selectedCategory) &&
+            (!selectedCity || product.city?.includes(selectedCity))
+        )
+
       setProducts(productsWithDates)
       setTotalPages(response.totalPages)
       setCurrentPage(response.currentPage)
@@ -50,23 +57,29 @@ export default function Home() {
       setIsLoading(true)
       try {
         const allProducts = await getProducts()
-        const uniqueCities = [...new Set(
-          allProducts.products
-            .map(product => product.city?.split(',')[1].trim())
-            .filter((city): city is string => city !== null)
-        )]
+        const uniqueCities = [
+          ...new Set(
+            allProducts.products
+              .map(product => product.city?.split(',')[1].trim())
+              .filter((city): city is string => city !== null)
+          )
+        ]
         setCities(uniqueCities)
-        
-        const uniqueCategories = [...new Set(allProducts.products.map(product => product.category))]
+
+        const uniqueCategories = [
+          ...new Set(allProducts.products.map(product => product.category))
+        ]
         const categoriesWithLabels = uniqueCategories.map(category => {
-          const categoryInfo = ServiceCategories.flatMap(group => group.items).find(item => item.value === category)
+          const categoryInfo = ServiceCategories.flatMap(
+            group => group.items
+          ).find(item => item.value === category)
           return {
             value: category,
             label: categoryInfo?.label || category
           }
         })
         setCategories(categoriesWithLabels)
-        
+
         await fetchProducts()
       } catch (error) {
         console.error('Error fetching initial data:', error)
@@ -77,57 +90,51 @@ export default function Home() {
     fetchInitialData()
   }, [])
 
-  const handleCityChange = async (city: string) => {
+  const handleCityChange = (city: string) => {
     setSelectedCity(city)
-    setCurrentPage(1)
-    fetchProducts(1)
   }
 
-  const handleCategoryChange = async (category: string) => {
+  const handleCategoryChange = (category: string) => {
     setSelectedCategory(category)
+  }
+
+  const handleSearch = () => {
     setCurrentPage(1)
     fetchProducts(1)
   }
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    fetchProducts(page)
+  const handleKeyPress = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      handleSearch()
+    }
   }
 
   return (
     <section>
       <div>
         <HeroSection />
-        {/* <Separator
-          label={
-            <span className='px-4'>
-              <h2 className='relative z-20 bg-gradient-to-b from-neutral-900 to-neutral-700 bg-clip-text px-3 py-2 text-center font-sans text-3xl text-[0.8rem] font-bold tracking-tight text-transparent dark:from-neutral-600 dark:to-white'>
-                Profesionales
-              </h2>
-            </span>
-          }
-          gradient
-        />
-
-        <div className='pt-0 md:pt-10'>
-          <h2 className='relative z-20 bg-gradient-to-b from-neutral-900 to-neutral-700 bg-clip-text py-2 text-center font-sans font-bold tracking-tight text-transparent dark:from-neutral-600 dark:to-white sm:text-2xl md:text-3xl lg:text-4xl'>
-            Conecta con expertos en diversos servicios
-          </h2>
-        </div> */}
-        <div className='mx-auto gap-4 flex justify-center pt-6 md:pt-8'>
-          <SelectWithSearch 
+        <div className='mx-auto flex flex-col justify-center gap-4 px-2 pt-6 md:flex-row md:pt-8'>
+          <SelectWithSearch
             onCategoryChange={handleCategoryChange}
             categories={categories}
           />
-          <SelectNativeComponent 
-            cities={cities} 
-            onCityChange={handleCityChange} 
+          <SelectNativeComponent
+            cities={cities}
+            onCityChange={handleCityChange}
           />
+          <Button
+            onClick={handleSearch}
+            onKeyPress={handleKeyPress}
+            className='bg-primary hover:bg-primary/90'
+          >
+            <SearchIcon className='mr-2 h-4 w-4' />
+            Buscar
+          </Button>
         </div>
         {isLoading ? (
           <div className='flex min-h-[455px] flex-col items-center justify-center text-center'>
-            <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-            <p className="mt-2 text-sm text-gray-500">Cargando servicios...</p>
+            <Loader2 className='h-8 w-8 animate-spin text-gray-500' />
+            <p className='mt-2 text-sm text-gray-500'>Cargando servicios...</p>
           </div>
         ) : products.length === 0 ? (
           <div className='flex min-h-[455px] flex-col items-center justify-center text-center'>
@@ -142,7 +149,7 @@ export default function Home() {
           </div>
         ) : (
           <>
-            <div className='grid grid-cols-1 gap-4 pt-10 md:grid-cols-2 md:pt-20 lg:grid-cols-3 xl:grid-cols-4 px-4 md:px-8 lg:px-16 2xl:px-32'>
+            <div className='grid grid-cols-1 gap-4 px-4 pt-10 md:grid-cols-2 md:px-8 md:pt-20 lg:grid-cols-3 lg:px-16 xl:grid-cols-4 2xl:px-32'>
               {products.map(product => (
                 <ProductCard
                   key={String(product.id)}
@@ -157,12 +164,12 @@ export default function Home() {
                 />
               ))}
             </div>
-            
-            <div className="flex justify-start mt-8 pb-8 px-4 md:px-8 lg:px-16 2xl:px-32">
-              <PaginationComponent 
-                currentPage={currentPage} 
+
+            <div className='mt-8 flex justify-start px-4 pb-8 md:px-8 lg:px-16 2xl:px-32'>
+              <PaginationComponent
+                currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={handlePageChange}
+                onPageChange={handleSearch}
               />
             </div>
           </>

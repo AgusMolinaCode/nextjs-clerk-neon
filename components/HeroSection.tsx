@@ -82,8 +82,8 @@ export function HeroSection() {
   ))
 
   return (
-    <div className='h-full w-full flex items-center flex-col justify-center'>
-      <div className='py-10'>
+    <div className='h-full w-full flex items-center flex-col justify-center px-2'>
+      <div className='py-5 md:py-10'>
         <h2 className='relative z-20 bg-gradient-to-b from-neutral-900 to-neutral-700 bg-clip-text py-2 text-center font-sans text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent dark:from-neutral-600 dark:to-white md:py-10 lg:text-7xl'>
           Arreglalo Ya! <br /> Servicios Profesionales
         </h2>

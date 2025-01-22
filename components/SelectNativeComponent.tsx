@@ -26,69 +26,71 @@ export default function SelectNativeComponent({
   const [value, setValue] = useState<string>("");
 
   const handleSelect = (currentValue: string) => {
-    setValue(currentValue === value ? "" : currentValue);
-    onCityChange(currentValue === value ? "" : currentValue);
+    setValue(currentValue);
+    onCityChange(currentValue);
     setOpen(false);
   };
 
   return (
-    <div className="space-y-2 w-60">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            id={id}
-            variant="outline"
-            role="combobox"
-            aria-expanded={open}
-            className="w-full justify-between bg-background px-3 font-normal outline-offset-0 hover:bg-background focus-visible:border-ring focus-visible:outline-[3px] focus-visible:outline-ring/20"
+    <div className="flex gap-2">
+      <div className="space-y-2 w-full md:w-60">
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              id={id}
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="w-full justify-between bg-background px-3 font-normal outline-offset-0 hover:bg-background focus-visible:border-ring focus-visible:outline-[3px] focus-visible:outline-ring/20"
+            >
+              <span className={cn("truncate", !value && "text-muted-foreground")}>
+                {value || "Ciudades"}
+              </span>
+              <ChevronDownIcon
+                width={16}
+                height={16}
+                strokeWidth={2}
+                className="shrink-0 text-muted-foreground/80"
+                aria-hidden="true"
+              />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-full min-w-[var(--radix-popper-anchor-width)] border-input p-0"
+            align="start"
           >
-            <span className={cn("truncate", !value && "text-muted-foreground")}>
-              {value || "Todas las ciudades"}
-            </span>
-            <ChevronDownIcon
-              width={16}
-              height={16}
-              strokeWidth={2}
-              className="shrink-0 text-muted-foreground/80"
-              aria-hidden="true"
-            />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent
-          className="w-full min-w-[var(--radix-popper-anchor-width)] border-input p-0"
-          align="start"
-        >
-          <Command>
-            <CommandInput placeholder="Busca una ciudad..." />
-            <CommandList>
-              <CommandEmpty>No se encontraron ciudades.</CommandEmpty>
-              <CommandGroup>
-                <CommandItem
-                  value=""
-                  onSelect={handleSelect}
-                >
-                  Todas las ciudades
-                  {value === "" && (
-                    <CheckIcon width={12} height={12} strokeWidth={2} className="ml-auto" />
-                  )}
-                </CommandItem>
-                {cities.map((city) => (
+            <Command>
+              <CommandInput placeholder="Busca una ciudad..." />
+              <CommandList>
+                <CommandEmpty>No se encontraron ciudades.</CommandEmpty>
+                <CommandGroup>
                   <CommandItem
-                    key={city}
-                    value={city}
+                    value=""
                     onSelect={handleSelect}
                   >
-                    {city}
-                    {value === city && (
+                    Todas las ciudades
+                    {value === "" && (
                       <CheckIcon width={12} height={12} strokeWidth={2} className="ml-auto" />
                     )}
                   </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </PopoverContent>
-      </Popover>
+                  {cities.map((city) => (
+                    <CommandItem
+                      key={city}
+                      value={city}
+                      onSelect={handleSelect}
+                    >
+                      {city}
+                      {value === city && (
+                        <CheckIcon width={12} height={12} strokeWidth={2} className="ml-auto" />
+                      )}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   );
 }
