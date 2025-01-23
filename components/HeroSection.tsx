@@ -3,6 +3,10 @@
 import React from 'react'
 import Image from 'next/image'
 import { Carousel, Card } from '@/components/ui/apple-cards-carousel'
+import { EyeCatchingButton_v1 } from './EyeCatchingButton_v1'
+import { SearchIcon, User } from 'lucide-react'
+import Link from 'next/link'
+import { SignedIn } from '@clerk/nextjs'
 
 const DummyContent = () => {
   return (
@@ -82,17 +86,25 @@ export function HeroSection() {
   ))
 
   return (
-    <div className='h-full w-full flex items-center flex-col justify-center px-2'>
+    <div className='flex h-full w-full flex-col items-center justify-center px-2'>
       <div className='py-5 md:py-10'>
-        <h2 className='relative z-20 bg-gradient-to-b from-neutral-900 to-neutral-700 bg-clip-text py-2 text-center font-sans text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent dark:from-neutral-600 dark:to-white md:py-10 lg:text-7xl'>
+        <h2 className='relative z-20 bg-gradient-to-b from-neutral-900 to-neutral-700 bg-clip-text py-2 text-center font-sans text-3xl font-bold tracking-tight text-transparent dark:from-neutral-600 dark:to-white sm:text-5xl md:py-10 md:text-6xl lg:text-7xl'>
           Arreglalo Ya! <br /> Servicios Profesionales
         </h2>
         <p className='mx-auto max-w-xl text-center text-sm text-neutral-700 dark:text-neutral-400 md:text-lg'>
-          Encuentra los mejores profesionales para tus necesidades. Desde plomería hasta electricidad, 
-          pasando por carpintería y más. Servicios de calidad cuando los necesitas.
+          Encuentra los mejores profesionales para tus necesidades. Desde
+          plomería hasta electricidad, pasando por carpintería y más. Servicios
+          de calidad cuando los necesitas.
         </p>
       </div>
-      {/* <Carousel items={cards} /> */}
+      <SignedIn>
+        <EyeCatchingButton_v1>
+          <Link href='/profile' className='flex items-center gap-1'>
+            <User className='h-5 w-5' />
+            Mi Perfil
+          </Link>
+        </EyeCatchingButton_v1>
+      </SignedIn>
     </div>
   )
 }

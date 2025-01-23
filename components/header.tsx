@@ -60,9 +60,9 @@ export default function Header() {
         transform: 'translateX(-50%)'
       }}
     >
-      <nav className='container flex items-center justify-between py-2'>
+      <nav className=' flex items-center justify-between py-2'>
         
-        <Sheet>
+        {/* <Sheet>
           <SheetTrigger className='sm:hidden'>
             <Menu
               className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'} h-6 w-6`}
@@ -89,9 +89,9 @@ export default function Header() {
               </li>
             </ul>
           </SheetContent>
-        </Sheet>
+        </Sheet> */}
 
-        <ul className='hidden items-center gap-14 text-sm font-medium sm:flex'>
+        <ul className=' items-center md:gap-14 text-sm font-medium flex'>
           <li
             className={`${isScrolled ? 'text-white dark:text-white' : 'text-black dark:text-white'} text-lg font-bold transition-all duration-300 hover:scale-105`}
           >
