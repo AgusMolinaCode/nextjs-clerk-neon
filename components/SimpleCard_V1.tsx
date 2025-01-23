@@ -1,39 +1,124 @@
 import { cn } from '@/lib/utils'
-import { MapPinned } from 'lucide-react'
+import {
+  CircleDollarSign,
+  CheckCircle,
+  XCircle,
+  Facebook,
+  Instagram,
+  Tag,
+  Minus
+} from 'lucide-react'
+import Link from 'next/link'
 
 interface CardProps {
   title?: string
   description?: string
   city?: string
+  price?: number
+  priceType?: string
+  isUrgent?: boolean
+  facebook?: string
+  instagram?: string
+  tags?: string[]
 }
 
 const CardBody = ({
   title,
   description,
   city,
-  className = 'p-4 flex gap-1'
+  price,
+  priceType,
+  isUrgent,
+  facebook,
+  instagram,
+  tags,
+  className = 'p-4 flex flex-col gap-1 space-y-3'
 }: CardProps & { className?: string }) => (
   <div className={cn('text-start', className)}>
     <div>
-      <h3 className='mb-1 text-lg font-bold text-gray-900 dark:text-gray-100'>
-        {title}
-      </h3>
-      <p className='max-w-xl text-gray-700 dark:text-gray-300'>{description}</p>
+      <p className='text-lg font-bold text-gray-500 dark:text-gray-300 md:text-xl'>
+        Descripcion:
+      </p>
+      <p className='max-w-lg text-gray-700 dark:text-gray-300'>{description}</p>
     </div>
-    <div>
-      <div className='flex items-center gap-2'>
-        <MapPinned />
-        <p className='text-sm text-gray-500 dark:text-gray-300'>{city}</p>
+    <div className='flex flex-wrap items-center justify-start gap-4'>
+      <div>
+        <p className='text-lg font-bold text-gray-500 dark:text-gray-300 md:text-xl'>
+          Urgencias:
+        </p>
+        <div className='pt-1'>
+          {isUrgent ? (
+            <div className='flex items-center justify-start gap-2'>
+              <CheckCircle className='h-5 w-5 text-green-500' />
+              <p className='text-sm font-semibold text-gray-500 dark:text-gray-300'>Si</p>
+            </div>
+          ) : (
+            <div className='flex items-center justify-start gap-2'>
+              <XCircle className='h-5 w-5 text-red-500' />
+              <p className='text-sm font-semibold text-gray-500 dark:text-gray-300'>No</p>
+            </div>
+          )}
+        </div>
+      </div>
+      <div>
+        <p className='text-lg font-bold text-gray-500 dark:text-gray-300 md:text-xl pt-1'>
+          Precio:
+        </p>
+        <div className='flex items-center gap-2 pt-1'>
+          <CircleDollarSign className='h-5 w-5 text-green-500' />
+          <p className='text-sm font-semibold text-gray-500 dark:text-gray-300'>{price}</p>/
+          <p className='text-sm font-semibold text-gray-500 dark:text-gray-300'>
+            {priceType}
+          </p>
+        </div>
       </div>
     </div>
+    {tags && tags.length > 0 && (
+      <div className='pt-2 '>
+        <p className='text-lg font-bold text-gray-500 dark:text-gray-300 md:text-xl'>
+          Especialidades:
+        </p>
+        <div className='grid md:grid-cols-2 gap-2 pt-2 lg:grid-cols-3'>
+          {tags.map((tag, index) => (
+            <div
+              key={index}
+              className='flex items-center justify-start gap-1 rounded-full'
+            >
+              <Minus className='h-3 w-3 text-gray-600 dark:text-gray-300' />
+              <span className='text-md font-semibold text-gray-700 dark:text-gray-300'>{tag}</span>
+            </div>
+          ))}
+        </div>
+    <div className='flex items-center justify-start gap-2 pt-8'>
+      <div className='flex items-center justify-start gap-2'>
+        <Link href={facebook ?? ''} target='_blank'>
+          <Facebook className='h-5 w-5 text-blue-500' />
+        </Link>
+        <Link href={instagram ?? ''} target='_blank'>
+          <Instagram className='h-5 w-5 text-pink-500' />
+        </Link>
+      </div>
+    </div>
+      </div>
+    )}
   </div>
 )
 
 //======================================
-export const SimpleCard_V1 = ({ title, description, city }: CardProps) => {
+export const SimpleCard_V1 = ({
+  title,
+  description,
+  city,
+  price,
+  priceType,
+  isUrgent,
+  facebook,
+  instagram,
+  tags
+}: CardProps) => {
   const Ellipses = () => {
     const sharedClasses =
-      'rounded-full outline outline-8 dark:outline-gray-950 sm:my-6 md:my-8 size-1 my-4 outline-gray-50 bg-green-400'
+      'rounded-md outline outline-8 dark:outline-gray-950 sm:my-6 md:my-8 size-1 my-4 outline-gray-50 bg-green-400'
     return (
       <div className='absolute z-0 grid h-full w-full items-center gap-8 lg:grid-cols-2'>
         <section className='absolute z-0 grid h-full w-full grid-cols-2 place-content-between'>
@@ -59,7 +144,17 @@ export const SimpleCard_V1 = ({ title, description, city }: CardProps) => {
     <div className=''>
       <Container>
         <div className='center w-full p-3'>
-          <CardBody title={title} description={description} city={city} />
+          <CardBody
+            title={title}
+            description={description}
+            city={city}
+            price={price}
+            priceType={priceType}
+            isUrgent={isUrgent}
+            facebook={facebook}
+            instagram={instagram}
+            tags={tags}
+          />
         </div>
       </Container>
     </div>
