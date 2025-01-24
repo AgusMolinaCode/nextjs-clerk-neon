@@ -48,22 +48,22 @@ const ProductList = ({
             onCancelEdit={handleCancelEdit} // Pasar el callback de cancelación
           />
         </div>
-        <div className='pt-4 lg:pt-6 w-full mx-auto flex justify-start md:max-w-7xl'>
-            <Insights />
-          </div>
+        {/* <div className='mx-auto flex w-full justify-start pt-4 md:max-w-7xl lg:pt-6'>
+          <Insights />
+        </div> */}
         <div className='pt-4 lg:pt-6'>
           <div className='mx-auto flex w-full items-center justify-start gap-2 md:max-w-7xl'>
-            <h1 className='text-lg font-bold'>Mis Publicaciones</h1>
+            <h1 className='text-lg font-bold py-4'>Mis Publicaciones</h1>
           </div>
           {products.length === 0 ? (
-            <p className='mt-4 text-center text-sm text-gray-500 dark:text-gray-300 lg:mt-8 h-28 flex flex-col items-center justify-center'>
+            <p className='mt-4 flex h-28 flex-col items-center justify-center text-center text-sm text-gray-500 dark:text-gray-300 lg:mt-8'>
               No hay publicaciones disponibles.
               <span className='text-xs text-gray-500 dark:text-gray-300'>
                 Añade una publicación para empezar a compartir.
               </span>
             </p>
           ) : (
-            <ul className='mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full max-w-7xl justify-center gap-2'>
+            <ul className='mx-auto grid w-full max-w-7xl grid-cols-1 justify-center gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
               {products.map(product => {
                 const firstImageUrl = Array.isArray(product.imageUrl)
                   ? product.imageUrl[0]

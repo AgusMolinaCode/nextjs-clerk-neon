@@ -42,6 +42,7 @@
     "react": "18",
     "react-dom": "18",
     "react-hook-form": "^7.54.1",
+    "react-whatsapp": "^0.3.0",
     "sonner": "^1.5.0",
     "svix": "^1.44.0",
     "tailwind-merge": "^2.5.2",

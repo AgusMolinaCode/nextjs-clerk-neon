@@ -17,7 +17,7 @@ const TagsInput = ({ value, onChange }: TagsInputProps) => {
     if (e.key === 'Enter' && inputValue.trim() !== '') {
       e.preventDefault()
       const newTag = inputValue.trim().toLowerCase()
-      if (value.length < 3 && !value.includes(newTag)) {
+      if (value.length < 6 && !value.includes(newTag)) {
         onChange([...value, newTag])
         setInputValue('')
       }
@@ -35,8 +35,8 @@ const TagsInput = ({ value, onChange }: TagsInputProps) => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Escribe y presiona Enter para agregar (máx. 3)"
-        disabled={value.length >= 3}
+        placeholder="Escribe una especialidad en tu servicio y presiona Enter para agregar (máx. 6)"
+        disabled={value.length >= 6}
         className="w-full"
       />
       <div className='flex flex-wrap gap-2'>

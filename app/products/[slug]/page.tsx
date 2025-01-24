@@ -4,6 +4,7 @@ import { CarouselComponent } from '@/components/CarouselComponent'
 import MapaCobertura from '@/components/MapaCobertura'
 import { SimpleCard_V1 } from '@/components/SimpleCard_V1'
 import { getProductBySlug } from '@/lib/products'
+import { currentUser, User } from '@clerk/nextjs/server'
 
 interface PageProps {
   params: Promise<{
@@ -19,10 +20,13 @@ const priceTypeTranslations = {
 }
 
 export default async function ProductPage({ params, searchParams }: PageProps) {
+  const user = await currentUser()
+
+  const phone = user?.phoneNumbers[0]?.phoneNumber
+  const nameLastname = user?.fullName
   const resolvedParams = await params
   const resolvedSearchParams = await searchParams
   const product = await getProductBySlug(resolvedParams.slug)
-  console.log(product)
 
   if (!product) {
     return <NotFound />
@@ -31,7 +35,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
   return (
     <div className='min-h-screen'>
       <BlurIn>{product.title}</BlurIn>
-      <div className='flex flex-col justify-center mx-auto gap-2 px-2 pt-10 md:px-8 md:pt-20 lg:flex-row'>
+      <div className='mx-auto flex flex-col justify-center gap-2 px-2 pt-10 md:px-8 md:pt-20 lg:flex-row'>
         <CarouselComponent images={product.imageUrl} />
         <SimpleCard_V1
           title={product.title ?? 'Sin título'}
@@ -45,11 +49,12 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           facebook={product.facebook}
           instagram={product.instagram}
           tags={product.tags}
+          phone={phone ?? ''}
+          nameLastname={nameLastname ?? ''}
         />
       </div>
       <div className='px-2 md:px-8'>
-
-      <MapaCobertura initialCity={product.city} />
+        <MapaCobertura initialCity={product.city} />
       </div>
     </div>
   )

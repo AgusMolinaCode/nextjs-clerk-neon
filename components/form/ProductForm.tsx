@@ -325,7 +325,7 @@ export function ProductForm({
               name='tags'
               render={({ field }) => (
                 <FormItem className='w-full'>
-                  <FormLabel>Tags</FormLabel>
+                  <FormLabel>Especialidades</FormLabel>
                   <FormControl>
                     <TagsInput value={field.value} onChange={field.onChange} />
                   </FormControl>
