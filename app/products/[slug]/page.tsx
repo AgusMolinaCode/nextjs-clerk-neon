@@ -31,7 +31,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
   return (
     <div className='min-h-screen'>
       <BlurIn>{product.title}</BlurIn>
-      <div className='flex flex-col gap-4 px-2 pt-10 md:px-8 md:pt-20 lg:flex-row'>
+      <div className='flex flex-col justify-center mx-auto gap-2 px-2 pt-10 md:px-8 md:pt-20 lg:flex-row'>
         <CarouselComponent images={product.imageUrl} />
         <SimpleCard_V1
           title={product.title ?? 'Sin título'}
@@ -46,7 +46,10 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           instagram={product.instagram}
           tags={product.tags}
         />
-        <MapaCobertura initialCity={product.city} />
+      </div>
+      <div className='px-2 md:px-8'>
+
+      <MapaCobertura initialCity={product.city} />
       </div>
     </div>
   )
