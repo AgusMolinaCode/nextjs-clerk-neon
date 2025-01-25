@@ -18,6 +18,7 @@ model User {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   products    Product[]
+  ratings     Rating[]  // Relación con las calificaciones hechas por el usuario
 }
 
 enum PriceType {
@@ -44,4 +45,19 @@ model Product {
   category    String    @default("")
   facebook    String    @default("")
   instagram   String    @default("")
+  ratings     Rating[]  // Relación con las calificaciones
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  rating    Int      // Valor de la calificación (por ejemplo, 1-5)
+  comment   String?  // Comentario opcional
+  productId String   // ID del producto calificado
+  product   Product  @relation(fields: [productId], references: [id])
+  userId    String   // ID del usuario que califica
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // @@unique([userId, productId])
 }

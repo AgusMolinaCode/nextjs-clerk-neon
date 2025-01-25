@@ -30,6 +30,7 @@ interface CardProps {
 }
 
 const CardBody = ({
+  title,
   description,
   price,
   priceType,
@@ -44,7 +45,7 @@ const CardBody = ({
   <div className={cn('text-start', className)}>
     <div>
       <p className='text-xl font-bold text-gray-800 dark:text-gray-100 md:text-2xl py-2'>
-        {nameLastname}
+        {title}
       </p>
       <p className='text-lg font-bold text-gray-600 dark:text-gray-300 md:text-xl'>
         Descripcion:

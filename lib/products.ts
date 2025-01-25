@@ -22,6 +22,13 @@ export interface ProductInput {
   instagram?: string
 }
 
+export interface RatingInput {
+  productId: string
+  userId: string
+  rating: number
+  comment?: string
+}
+
 export async function getProducts(city?: string, page: number = 1, limit: number = 8) {
   try {
     const validPage = Math.max(1, page);
@@ -81,7 +88,7 @@ export async function getProducts(city?: string, page: number = 1, limit: number
 }
 
 export async function getProductBySlug(slug: string) {
-  return await prisma.product.findUnique({
+  return await prisma.product.findUniqueOrThrow({
     where: {
       slug
     }
@@ -188,5 +195,93 @@ export async function deleteProduct(id: string) {
     revalidatePath('/profile')
   } catch (error) {
     console.error('Error al eliminar el producto:', error)
+  }
+}
+
+export async function createRating(data: {
+  productId: string;
+  userId: string;
+  rating: number;
+  comment?: string;
+}) {
+  if (!data.productId || !data.userId) {
+    throw new Error('Product ID and User ID are required');
+  }
+
+  try {
+    // Verificar que el producto y el usuario existan
+    const productExists = await prisma.product.findUnique({
+      where: { id: data.productId }
+    });
+
+    const userExists = await prisma.user.findUnique({
+      where: { id: data.userId }
+    });
+
+    if (!productExists) {
+      throw new Error('Product not found');
+    }
+
+    if (!userExists) {
+      throw new Error('User not found');
+    }
+
+    const newRating = await prisma.rating.create({
+      data: {
+        rating: data.rating,
+        comment: data.comment,
+        product: {
+          connect: {
+            id: data.productId
+          }
+        },
+        user: {
+          connect: {
+            id: data.userId
+          }
+        }
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true
+          }
+        }
+      }
+    });
+    
+    return { rating: newRating, error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error creating rating:', error.message);
+      return { rating: null, error: error.message };
+    } else {
+      console.error('Error creating rating:', error);
+      return { rating: null, error: 'Unknown error' };
+    }
+  }
+}
+
+export async function getRating(productId: string) {
+  try {
+    const ratings = await prisma.rating.findMany({
+      where: {
+        productId
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            imageUrl: true
+          }
+        }
+      }
+    })
+
+    return ratings
+  } catch (error) {
+    console.error('Error fetching ratings:', error)
+    return []
   }
 }
