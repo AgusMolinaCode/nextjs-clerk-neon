@@ -103,6 +103,11 @@ export default function Home() {
     fetchProducts(1)
   }
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    fetchProducts(page)
+  }
+
   const handleKeyPress = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter') {
       handleSearch()
@@ -169,7 +174,7 @@ export default function Home() {
               <PaginationComponent
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={handleSearch}
+                onPageChange={handlePageChange}
               />
             </div>
           </>
