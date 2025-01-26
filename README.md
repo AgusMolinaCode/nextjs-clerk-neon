@@ -16,9 +16,11 @@ This is a web application for searching and finding professionals in various cat
 - [TypeScript](https://www.typescriptlang.org/) - Typed superset of JavaScript
 - [Prisma](https://www.prisma.io/) - Modern database toolkit for TypeScript and Node.js
 - [PostgreSQL](https://www.postgresql.org/) - Powerful open-source relational database
+- [Neon](https://neon.tech/) - Serverless PostgreSQL database platform
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework for rapid UI development
 - [Clerk](https://clerk.dev/) - User authentication and management platform
 - [Uploadthing](https://uploadthing.com/) - File upload and management service
+- [Mapbox](https://www.mapbox.com/) - Maps and location services platform for visualizing cities
 
 ## Project Structure
 The project follows a standard Next.js directory structure:
@@ -67,21 +69,12 @@ Professionals can upload images to their profiles using the Uploadthing service.
 ## Environment Setup
 ### Prerequisites
 - Node.js (version 14 or higher)
-- PostgreSQL database
+- PostgreSQL database (hosted on Neon or locally)
 - Clerk account for user authentication
 
 ### Environment Variables
-Create a `.env` file in the root directory of the project and add the following variables:
-
-```
-DATABASE_URL=your_database_url
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
-CLERK_SECRET_KEY=your_clerk_secret_key
-UPLOADTHING_SECRET=your_uploadthing_secret_key
-NEXT_PUBLIC_UPLOADTHING_APP_ID=your_uploadthing_app_id
-```
-
-Replace `your_database_url`, `your_clerk_publishable_key`, `your_clerk_secret_key`, `your_uploadthing_secret_key`, and `your_uploadthing_app_id` with your actual database URL, Clerk API keys, and Uploadthing credentials.
+- Please refer to the `.env.example` file in the root directory of the project for the required environment variables.
+- Follow the instructions provided in the `.env.example` file to set up your environment variables.
 
 ### Prisma Setup
 1. Install the Prisma CLI globally:
