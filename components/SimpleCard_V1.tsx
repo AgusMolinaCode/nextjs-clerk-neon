@@ -1,4 +1,3 @@
-
 'use client'
 
 import { cn } from '@/lib/utils'
@@ -135,12 +134,16 @@ const CardBody = ({
             </p>
           </div>
           <div className='flex items-center justify-start gap-2 pt-2'>
-            <Link href={instagram ?? ''} target='_blank'>
-              <Instagram className='mt-1 h-7 w-7 text-pink-500' />
-            </Link>
-            <Link href={facebook ?? ''} target='_blank'>
-              <Facebook className='h-7 w-7 text-blue-500' />
-            </Link>
+            {facebook && (
+              <Link href={facebook} target='_blank'>
+                <Facebook className='h-7 w-7 text-blue-500' />
+              </Link>
+            )}
+            {instagram && (
+              <Link href={instagram} target='_blank'>
+                <Instagram className='mt-1 h-7 w-7 text-pink-500' />
+              </Link>
+            )}
           </div>
         </div>
       </div>

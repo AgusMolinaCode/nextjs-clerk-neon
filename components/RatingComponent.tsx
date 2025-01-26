@@ -3,89 +3,138 @@
 import React, { useState } from 'react'
 import { Product } from '@/lib/utils'
 import { createRating } from '@/lib/products'
-import { useUser } from '@clerk/nextjs'
+import { RatingSchema } from '@/lib/validation'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage
+} from '@/components/ui/form'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from './ui/select'
 
 interface RatingComponentProps {
   product: Product
-  userId: string
 }
 
-const RatingComponent = ({ product, userId }: RatingComponentProps) => {
-  const [rating, setRating] = useState<number>(1)
-  const [comment, setComment] = useState<string>('')
+type RatingInput = {
+  productId: string
+  rating: number
+  comment?: string
+}
 
-  const { user } = useUser()
+const RatingComponent = ({ product }: RatingComponentProps) => {
+  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
 
-  console.log(user?.id , user?.firstName)
+  const form = useForm<z.infer<typeof RatingSchema>>({
+    resolver: zodResolver(RatingSchema),
+    defaultValues: {
+      rating: 1,
+      comment: ''
+    }
+  })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (values: z.infer<typeof RatingSchema>) => {
+    setIsLoading(true)
 
-    if (!product.id || !userId) {
-      console.error('Product ID or User ID is missing')
+    if (!product.id) {
+      console.error('Product ID is missing')
       return
     }
 
-    console.log(userId)
+    const ratingData: RatingInput = {
+      productId: product.id,
+      rating: values.rating,
+      comment: values.comment
+    }
 
     try {
-      const result = await createRating({
-        productId: product.id,
-        userId,
-        rating,
-        comment
-      })
+      const result = await createRating(ratingData)
 
       if (result.error) {
         console.error('Error al crear rating:', result.error)
       } else {
-        // Limpiar el formulario
-        setRating(1)
-        setComment('')
-        // Recargar la página para ver el nuevo rating
-        window.location.reload()
+        toast({
+          title: 'Calificación creada con éxito',
+          description: 'Gracias por tu calificación.',
+          variant: 'default'
+        })
       }
     } catch (error) {
       console.error('Error al crear rating:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
   return (
-    <div className="mt-6 p-4 border rounded-lg">
-      <h3 className="text-lg font-semibold mb-4">Calificar Producto</h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-2">
-            Calificación (1-5):
-            <input
-              type="number"
-              min={1}
-              max={5}
-              value={rating}
-              onChange={(e) => setRating(Number(e.target.value))}
-              className="ml-2 p-2 border rounded"
-              required
+    <div className='mt-6 rounded-lg border dark:border-gray-800 border-gray-700 p-2 max-w-5xl mx-auto bg-black/10 dark:bg-black/30 backdrop-blur-lg'>
+      <h3 className='mb-4 text-lg font-semibold'>
+        Calificar Profesional
+      </h3>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4'>
+          <div>
+            <FormField
+              control={form.control}
+              name='rating'
+              render={({ field }) => (
+                <Select
+                  value={field.value.toString()}
+                  onValueChange={value => field.onChange(parseInt(value))}
+                >
+                  <SelectTrigger className='border-gray-700 dark:border-gray-800 w-32'>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='1'>1</SelectItem>
+                    <SelectItem value='2'>2</SelectItem>
+                    <SelectItem value='3'>3</SelectItem>
+                    <SelectItem value='4'>4</SelectItem>
+                    <SelectItem value='5'>5</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
             />
-          </label>
-        </div>
-        <div>
-          <label className="block mb-2">
-            Comentario:
-            <textarea
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              className="w-full mt-1 p-2 border rounded"
-              rows={3}
+          </div>
+          <div>
+            <FormField
+              control={form.control}
+              name='comment'
+              render={({ field }) => (
+                <FormItem className='w-full'>
+                  <FormLabel>Comentario</FormLabel>
+                  <FormControl className='border-gray-700 dark:border-gray-800'>
+                    <Textarea
+                      rows={5}
+                      placeholder='Deja tu comentario'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </label>
-        </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Enviar Calificación
-        </button>
-      </form>
+          </div>
+          <Button type='submit' disabled={isLoading}>
+            {isLoading ? 'Enviando...' : 'Enviar Calificación'}
+          </Button>
+        </form>
+      </Form>
     </div>
   )
 }

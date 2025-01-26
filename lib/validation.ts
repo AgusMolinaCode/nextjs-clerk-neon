@@ -5,7 +5,7 @@ export const CreateFormSchema = z.object({
   slug: z.string().min(1, { message: 'El slug es obligatorio.' }),
   description: z.string()
     .min(20, { message: 'La descripción debe tener al menos 20 caracteres.' })
-    .max(500, { message: 'La descripción no puede exceder los 500 caracteres.' }),
+    .max(600, { message: 'La descripción no puede exceder los 600 caracteres.' }),
   price: z.coerce.number()
     .min(0, { message: 'El precio no puede ser negativo.' })
     .optional(),
@@ -29,3 +29,11 @@ export const CreateFormSchema = z.object({
 })
 
 export const UpdateFormSchema = CreateFormSchema.partial()
+
+export const RatingSchema = z.object({
+  rating: z.number().min(1, { message: 'La calificación debe ser al menos 1.' }).max(5, { message: 'La calificación debe ser como máximo 5.' }),
+  comment: z
+    .string()
+    .min(20, { message: 'El comentario debe tener al menos 20 caracteres.' })
+    .max(300, { message: 'El comentario no puede exceder los 300 caracteres.' })
+})
