@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
-import { getRating } from '@/lib/products'
 
 interface Product {
   id: string
@@ -21,7 +20,6 @@ export const Card_with_image_v2 = ({
   alt
 }: CardProps & { imageUrl: string; alt: string }) => {
 
-  const ratings = await getRating(product.id)
 
   return (
     <div className='group relative aspect-[4/3] overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700'>
@@ -41,6 +39,8 @@ export const Card_with_image_v2 = ({
 }
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+
+  
   return (
     <Link href={`/products/${product.slug}`} className=''>
       <Card_with_image_v2

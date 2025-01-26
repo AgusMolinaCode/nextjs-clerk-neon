@@ -128,7 +128,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
             </div>
           </div>
         </div>
-        <div className='mx-auto grid max-w-5xl grid-cols-1 gap-2 px-2 pt-6 md:grid-cols-2 md:px-8 md:pt-10 lg:flex-row xl:grid-cols-3'>
+        <div className='mx-auto grid max-w-5xl grid-cols-1 gap-4 px-2 pt-6 md:grid-cols-2 md:px-8 md:pt-10 lg:flex-row xl:grid-cols-3'>
           {ratings.map(rating => (
             <div key={rating.id} className='max-w-sm'>
               <div className='flex items-center gap-2'>

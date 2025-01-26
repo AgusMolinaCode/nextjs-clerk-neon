@@ -164,7 +164,8 @@ export default function Home() {
                     description:
                       product.description || 'Descripción no disponible',
                     imageUrl:
-                      product.imageUrl?.[0] || '/assets/images/no-product.png'
+                      product.imageUrl?.[0] || '/assets/images/no-product.png',
+                    slug: product.slug
                   }}
                 />
               ))}

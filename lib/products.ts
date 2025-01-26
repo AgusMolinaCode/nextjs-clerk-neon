@@ -64,7 +64,10 @@ export async function getProducts(city?: string, page: number = 1, limit: number
         createdAt: 'desc'
       },
       skip: finalSkip,
-      take: validLimit
+      take: validLimit,
+      include: {
+        ratings: true
+      }
     });
 
     return {

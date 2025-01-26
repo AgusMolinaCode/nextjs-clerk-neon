@@ -25,6 +25,14 @@ import {
   SelectTrigger,
   SelectValue
 } from './ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from '@/components/ui/dialog'
 
 interface RatingComponentProps {
   product: Product
@@ -43,7 +51,7 @@ const RatingComponent = ({ product }: RatingComponentProps) => {
   const form = useForm<z.infer<typeof RatingSchema>>({
     resolver: zodResolver(RatingSchema),
     defaultValues: {
-      rating: 1,
+      rating: 5,
       comment: ''
     }
   })
@@ -82,10 +90,8 @@ const RatingComponent = ({ product }: RatingComponentProps) => {
   }
 
   return (
-    <div className='mt-6 rounded-lg border dark:border-gray-800 border-gray-700 p-2 max-w-5xl mx-auto bg-black/10 dark:bg-black/30 backdrop-blur-lg'>
-      <h3 className='mb-4 text-lg font-semibold'>
-        Calificar Profesional
-      </h3>
+    <div className='mx-auto mt-6 max-w-5xl rounded-lg border border-gray-700 bg-white/40 p-2 backdrop-blur-lg dark:border-gray-800 dark:bg-black/30'>
+      <h3 className='mb-4 text-lg font-semibold'>Calificar Profesional</h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4'>
           <div>
@@ -97,7 +103,10 @@ const RatingComponent = ({ product }: RatingComponentProps) => {
                   value={field.value.toString()}
                   onValueChange={value => field.onChange(parseInt(value))}
                 >
-                  <SelectTrigger className='border-gray-700 dark:border-gray-800 w-32'>
+                  <FormLabel className='font-semibold text-gray-700 dark:text-gray-500'>
+                    Calificación
+                  </FormLabel>
+                  <SelectTrigger className='w-32 border-gray-700 dark:border-gray-800 mt-3'>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -117,7 +126,9 @@ const RatingComponent = ({ product }: RatingComponentProps) => {
               name='comment'
               render={({ field }) => (
                 <FormItem className='w-full'>
-                  <FormLabel>Comentario</FormLabel>
+                  <FormLabel className='font-semibold text-gray-700 dark:text-gray-500'>
+                    Comentario
+                  </FormLabel>
                   <FormControl className='border-gray-700 dark:border-gray-800'>
                     <Textarea
                       rows={5}
@@ -125,10 +136,16 @@ const RatingComponent = ({ product }: RatingComponentProps) => {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className='font-semibold text-red-700 dark:text-red-500' />
                 </FormItem>
               )}
             />
+          </div>
+          <div>
+            <span className='rounded-lg bg-black/80 p-1 px-3 text-sm font-semibold text-red-500 dark:bg-transparent dark:px-0'>
+              Una vez enviada, la calificación y el comentario no podrán ser
+              editados ni eliminados.
+            </span>
           </div>
           <Button type='submit' disabled={isLoading}>
             {isLoading ? 'Enviando...' : 'Enviar Calificación'}
