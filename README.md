@@ -3,6 +3,8 @@
 ## Introduction
 This is a web application for searching and finding professionals in various categories and cities. It allows users to browse through a list of professionals, view their details, and leave ratings and comments.
 
+![Captura de pantalla 26 01 2025 a 04 43 48 a  m](https://github.com/user-attachments/assets/9b8870c4-5aa5-4f03-bfa4-38fc3f064d05)
+
 ## Features
 - Search for professionals by category and city
 - View detailed information about each professional
