@@ -73,7 +73,7 @@ const MapaCobertura: React.FC<MapaCoberturaProps> = ({ initialCity }) => {
   }, [initialCity])
 
   return (
-    <div className='flex flex-col h-full gap-2 w-full max-w-6xl mx-auto pt-4 md:pt-10'>
+    <div className='flex flex-col h-full gap-2 w-full max-w-5xl mx-auto pt-4 md:pt-10'>
       <div
         className='rounded-md flex-1 min-h-[400px]'
         id='map'

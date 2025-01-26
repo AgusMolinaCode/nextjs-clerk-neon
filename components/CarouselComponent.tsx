@@ -33,7 +33,7 @@ export function CarouselComponent({ images }: { images: string[] }) {
   }, [api])
 
   return (
-    <div className='mx-auto max-w-lg lg:mx-0 rounded-md'>
+    <div className='mx-auto lg:mx-0 rounded-md'>
       <Carousel
         plugins={[
           Autoplay({
@@ -50,13 +50,13 @@ export function CarouselComponent({ images }: { images: string[] }) {
           {images.map((image, index) => (
             <CarouselItem key={index}>
               <Card className='dark:bg-gray-900 bg-gray-300 rounded-md'>
-                <CardContent className='flex h-[300px] w-full items-center justify-center p-0 md:h-[500px] md:w-[500px]'>
+                <CardContent className='flex h-[300px] w-full items-center justify-center p-0 md:h-[600px] md:w-[600px]'>
                   <Image
-                    width={500}
-                    height={500}
+                    width={600}
+                    height={600}
                     src={image}
                     alt={`Slide ${index + 1}`}
-                    className='h-full w-full object-contain  md:h-[500px] md:w-[500px] rounded-md'
+                    className='h-full w-full object-contain  md:h-[600px] md:w-[600px] rounded-md'
                   />
                 </CardContent>
               </Card>

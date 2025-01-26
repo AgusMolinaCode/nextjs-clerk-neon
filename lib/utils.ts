@@ -13,7 +13,7 @@ export interface Product {
   price?: number | null
   priceType: 'fixed' | 'hourly' | 'project'
   isUrgent: boolean
-  imageUrl?: string[]
+  imageUrl: string[]
   city?: string | null
   userId: string
   createdAt: Date
@@ -22,6 +22,21 @@ export interface Product {
   category: string
   facebook: string
   instagram: string
+  ratings?: Rating[]
+}
+
+export interface Rating {
+  id: string
+  rating: number
+  comment?: string
+  productId: string
+  userId: string
+  user: {
+    id: string
+    firstName?: string
+  }
+  createdAt: Date
+  updatedAt: Date
 }
 
 export type ProductInput = {

@@ -1,4 +1,3 @@
-
 'use client'
 
 import { cn } from '@/lib/utils'
@@ -30,6 +29,7 @@ interface CardProps {
 }
 
 const CardBody = ({
+  title,
   description,
   price,
   priceType,
@@ -44,7 +44,7 @@ const CardBody = ({
   <div className={cn('text-start', className)}>
     <div>
       <p className='text-xl font-bold text-gray-800 dark:text-gray-100 md:text-2xl py-2'>
-        {nameLastname}
+        {title}
       </p>
       <p className='text-lg font-bold text-gray-600 dark:text-gray-300 md:text-xl'>
         Descripcion:
@@ -134,12 +134,16 @@ const CardBody = ({
             </p>
           </div>
           <div className='flex items-center justify-start gap-2 pt-2'>
-            <Link href={instagram ?? ''} target='_blank'>
-              <Instagram className='mt-1 h-7 w-7 text-pink-500' />
-            </Link>
-            <Link href={facebook ?? ''} target='_blank'>
-              <Facebook className='h-7 w-7 text-blue-500' />
-            </Link>
+            {facebook && (
+              <Link href={facebook} target='_blank'>
+                <Facebook className='h-7 w-7 text-blue-500' />
+              </Link>
+            )}
+            {instagram && (
+              <Link href={instagram} target='_blank'>
+                <Instagram className='mt-1 h-7 w-7 text-pink-500' />
+              </Link>
+            )}
           </div>
         </div>
       </div>

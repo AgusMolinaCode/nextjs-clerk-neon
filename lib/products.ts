@@ -4,6 +4,7 @@ import { generateSlug } from '@/constants'
 import prisma from './prisma'
 import { revalidatePath } from 'next/cache'
 import { Prisma } from '@prisma/client'
+import { currentUser } from '@clerk/nextjs/server'
 
 export interface ProductInput {
   id?: string
@@ -20,6 +21,12 @@ export interface ProductInput {
   tags?: string[]
   facebook?: string
   instagram?: string
+}
+
+export interface RatingInput {
+  productId: string;
+  rating: number;
+  comment?: string;
 }
 
 export async function getProducts(city?: string, page: number = 1, limit: number = 8) {
@@ -81,9 +88,12 @@ export async function getProducts(city?: string, page: number = 1, limit: number
 }
 
 export async function getProductBySlug(slug: string) {
-  return await prisma.product.findUnique({
+  return await prisma.product.findUniqueOrThrow({
     where: {
       slug
+    },
+    include: {
+      user: true
     }
   })
 }
@@ -188,5 +198,100 @@ export async function deleteProduct(id: string) {
     revalidatePath('/profile')
   } catch (error) {
     console.error('Error al eliminar el producto:', error)
+  }
+}
+
+export async function createRating(data: {
+  productId: string;
+  rating: number;
+  comment?: string;
+}) {
+  const user = await currentUser()
+
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  if (!data.productId) {
+    throw new Error('Product ID is required');
+  }
+
+  try {
+    // Verificar que el producto exista
+    const productExists = await prisma.product.findUnique({
+      where: { id: data.productId }
+    });
+
+    if (!productExists) {
+      throw new Error('Product not found');
+    }
+
+    const newRating = await prisma.rating.create({
+      data: {
+        rating: data.rating,
+        comment: data.comment,
+        product: {
+          connect: {
+            id: data.productId
+          }
+        },
+        user: {
+          connectOrCreate: {
+            where: { clerkUserId: user.id },
+            create: {
+              clerkUserId: user.id,
+              email: user.emailAddresses[0]?.emailAddress || '',
+              firstName: user.firstName,
+              lastName: user.lastName,
+              imageUrl: user.imageUrl
+            }
+          }
+        }
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            imageUrl: true
+          }
+        }
+      }
+    });
+
+    revalidatePath('/products/[slug]')
+    return { rating: newRating, error: null };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Error creating rating:', error.message);
+      return { rating: null, error: error.message };
+    } else {
+      console.error('Error creating rating:', error);
+      return { rating: null, error: 'Unknown error' };
+    }
+  }
+}
+
+export async function getRating(productId: string) {
+  try {
+    const ratings = await prisma.rating.findMany({
+      where: {
+        productId
+      },
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            imageUrl: true,
+            clerkUserId: true
+          }
+        }
+      }
+    })
+
+    return ratings
+  } catch (error) {
+    console.error('Error fetching ratings:', error)
+    return []
   }
 }
